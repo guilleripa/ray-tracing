@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Scene>
+  <Lights>
+    <Ligth name="ligth1">
+      <position x="3" y="2" z="4" w="1"></position>
+      <color x="1" y="1" z="1" w="1"></color>
+    </Ligth>
+    <Ligth name="ligth2">
+      <position x="1" y="2" z="4" w="1"></position>
+      <color x="1" y="1" z="1" w="1"></color>
+    </Ligth>
+  </Lights>
+</Scene>
