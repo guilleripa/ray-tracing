@@ -76,11 +76,19 @@
     <ClCompile Include="..\Light.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\tinyxml2.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="ImageIO.cpp" />
+    <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Camera.h" />
     <ClInclude Include="..\Light.h" />
     <ClInclude Include="..\tinyxml2.h" />
+    <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="ImageIO.h" />
+    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Table.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Scene.xml" />

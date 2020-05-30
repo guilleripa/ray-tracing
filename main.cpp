@@ -3,6 +3,7 @@
 #include "tinyxml2.h"
 
 #include "Light.h"
+#include "OpenGL-basico/ImageIO.h"
 
 using namespace std;
 
@@ -21,6 +22,9 @@ int main(int argc, char *argv[]) {
 	float color1[4] = { x, x, x, x };
 
 	Light light1 = Light(position1, color1);
+
+    ImageIO().saveAsPng();
+
 
 	return 0;
 }
