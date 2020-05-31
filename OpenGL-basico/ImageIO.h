@@ -1,5 +1,8 @@
 #include <iostream>
+#include <vector>
 #include "FreeImage.h"
+
+#include "Scene.h"
 
 #ifndef IMAGEIO_H
 #define IMAGEIO_H
@@ -9,11 +12,10 @@ using namespace std;
 class ImageIO
 {
 private:
-	int width = 640;
-	int height = 400;
+
 
 public:
-	void ImageIO::saveAsPng();
+	void ImageIO::saveAsPng(Scene scene, vector<vector<Vector3>> pixels);
 
 };
 

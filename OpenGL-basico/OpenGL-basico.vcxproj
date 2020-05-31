@@ -78,8 +78,11 @@
     <ClCompile Include="..\tinyxml2.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="ImageIO.cpp" />
+    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="Whitted.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Camera.h" />
@@ -87,8 +90,11 @@
     <ClInclude Include="..\tinyxml2.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="ImageIO.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="Whitted.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Scene.xml" />

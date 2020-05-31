@@ -3,7 +3,7 @@
 #include "tinyxml2.h"
 
 #include "Light.h"
-#include "OpenGL-basico/ImageIO.h"
+#include "OpenGL-basico/Whitted.h"
 
 using namespace std;
 
@@ -23,8 +23,9 @@ int main(int argc, char *argv[]) {
 
 	Light light1 = Light(position1, color1);
 
-    ImageIO().saveAsPng();
+	Scene scene = Scene();
 
+	Whitted().run(scene);
 
 	return 0;
 }

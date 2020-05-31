@@ -24,4 +24,4 @@ public:
 
 };
 
-#endif // LIGHT_H
+#endif // CAMERA_H
