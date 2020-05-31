@@ -29,8 +29,8 @@ Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int
     if (object != NULL) {
         Vector3 rayOrigin; // todo
         Vector3 rayDirection; // todo
-        Vector3 intersection;
-        Vector3 normal;
+        Vector3 intersection; // todo
+        Vector3 normal; // todo
         //calcular la normal en la intersección;
         //return shadow(obj.intersecado más cercano, rayo, intersección, normal, depth);
         return shadow(scene, object, rayOrigin, rayDirection, intersection, normal, depth);
@@ -45,7 +45,6 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
     Vector3 color = Vector3(0, 0, 0); // todo término del ambiente??  
     for (Light light : scene.getLights()) {
         //rayo_s = rayo desde el punto a la luz;
-        Vector3 rayLigthOrigin = Vector3(light.getPosition().getX(), light.getPosition().getY(), light.getPosition().getZ());
         Vector3 rayLigthDirection = Vector3(0,0,0); // todo 
         if (normal.dot(rayLigthDirection) > 0 ){ //if (producto punto entre normal y dirección de la luz es positivo) {
             //Calcular cuánta luz es bloqueada por sup.opacas y transp., y usarlo para escalar los términos difusos y especulares antes de añadirlos a color;
