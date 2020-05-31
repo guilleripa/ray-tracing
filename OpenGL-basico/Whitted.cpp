@@ -1,5 +1,6 @@
 #include "Whitted.h"
 #include <vector>
+#include <limits>
 
 #include "Vector3.h"
 #include "ImageIO.h"
@@ -8,7 +9,7 @@ void Whitted::run(Scene scene) {
 
 	//Seleccionar el centro de proyección y la ventana en el plano de vista;
     vector<vector<Vector3>> pixels(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
-    Vector3 rayOrigin = Vector3(0,0,0);// todo scene camera 
+    Vector3 rayOrigin = Vector3(scene.getCamera().getEye()[0],0,0);// todo scene camera usar vector3
     for (int j = 0; j < scene.getHeight(); ++j) {
         for (int i = 0; i < scene.getWidth(); ++i) {
             // determinar rayo por centro de proyección y píxel;
@@ -24,11 +25,10 @@ void Whitted::run(Scene scene) {
 Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int depth)
 {
     //determinar la intersección más cercana de rayo con un objeto;
-    bool intersectedObject = false; // Hay objeto intersecado
-    if (intersectedObject) {
+    Object* object = intersection(scene, rayOrigin, rayDirection);
+    if (object->getInitialized()) {
         Vector3 rayOrigin; // todo
         Vector3 rayDirection; // todo
-        Object object;
         Vector3 intersection;
         Vector3 normal;
         //calcular la normal en la intersección;
@@ -39,12 +39,12 @@ Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int
         return scene.getBackgroundColor();
 }
 
-Vector3 Whitted::shadow(Scene scene, Object object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth)
+Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth)
 //Vector3 shadow(objeto, rayo, punto, normal, int profundidad)
 {
     Vector3 color = Vector3(0, 0, 0); // todo
     //Vector3 color = término del ambiente;
-    for (Light ligth : scene.getLight()) {
+    for (Light ligth : scene.getLights()) {
         /*rayo_s = rayo desde el punto a la luz;
         if (producto punto entre normal y dirección de la luz es positivo) {
             Calcular cuánta luz es bloqueada por sup.opacas y transp., y usarlo para escalar los términos difusos y especulares antes de añadirlos a color;
@@ -53,14 +53,14 @@ Vector3 Whitted::shadow(Scene scene, Object object, Vector3 rayOrigin, Vector3 r
     
     if (depth < scene.getMaxDepth()) {
        
-        if (object.getReflectionCoefficient() > 0) {
+        if (object->getReflectionCoefficient() > 0) {
 
             Vector3 rayOriginReflection; // rayo_r = rayo en la dirección de reflexión desde punto;
             Vector3 rayDirectionReflection;
             Vector3 colorReflection = trace(scene, rayOriginReflection, rayDirectionReflection, depth + 1);
             //escalar color_r por el coeficiente especular y añadir a color;
         }
-        if (object.getRefractiveCoefficient() > 0) {
+        if (object->getRefractiveCoefficient() > 0) {
             //if (no ocurre la reflexión interna total) {
                 Vector3 rayOriginTransparent; // rayo_t = rayo en la dirección de refracción desde punto; */
                 Vector3 rayDirectionTransparent;
@@ -71,4 +71,18 @@ Vector3 Whitted::shadow(Scene scene, Object object, Vector3 rayOrigin, Vector3 r
        
     }
     return color;
+}
+
+Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection) {
+
+    float distanceMin = std::numeric_limits<float>::infinity();
+    float distance = std::numeric_limits<float>::infinity();
+    Object* nearestObject = NULL;
+    for (Object* object : scene.getObjects()) {
+        if (object->intersects(rayOrigin, rayDirection, distance) && distance < distanceMin) {
+            nearestObject = object;
+            distanceMin = distance;
+        }
+    }
+    return nearestObject;
 }
