@@ -78,6 +78,7 @@
     <ClCompile Include="..\tinyxml2.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="ImageIO.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="..\tinyxml2.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="ImageIO.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sphere.h" />
