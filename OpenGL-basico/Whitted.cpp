@@ -9,7 +9,7 @@ void Whitted::run(Scene scene) {
 
 	//Seleccionar el centro de proyección y la ventana en el plano de vista;
     vector<vector<Vector3>> pixels(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
-    Vector3 rayOrigin = Vector3(scene.getCamera().getEye()[0],0,0);// todo scene camera usar vector3
+    Vector3 rayOrigin = Vector3(scene.getCamera().getEye().getX(), scene.getCamera().getEye().getY(), scene.getCamera().getEye().getZ());
     for (int j = 0; j < scene.getHeight(); ++j) {
         for (int i = 0; i < scene.getWidth(); ++i) {
             // determinar rayo por centro de proyección y píxel;
@@ -26,7 +26,7 @@ Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int
 {
     //determinar la intersección más cercana de rayo con un objeto;
     Object* object = intersection(scene, rayOrigin, rayDirection);
-    if (object->getInitialized()) {
+    if (object != NULL) {
         Vector3 rayOrigin; // todo
         Vector3 rayDirection; // todo
         Vector3 intersection;
@@ -42,13 +42,14 @@ Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int
 Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth)
 //Vector3 shadow(objeto, rayo, punto, normal, int profundidad)
 {
-    Vector3 color = Vector3(0, 0, 0); // todo
-    //Vector3 color = término del ambiente;
-    for (Light ligth : scene.getLights()) {
-        /*rayo_s = rayo desde el punto a la luz;
-        if (producto punto entre normal y dirección de la luz es positivo) {
-            Calcular cuánta luz es bloqueada por sup.opacas y transp., y usarlo para escalar los términos difusos y especulares antes de añadirlos a color;
-        }*/
+    Vector3 color = Vector3(0, 0, 0); // todo término del ambiente??  
+    for (Light light : scene.getLights()) {
+        //rayo_s = rayo desde el punto a la luz;
+        Vector3 rayLigthOrigin = Vector3(light.getPosition().getX(), light.getPosition().getY(), light.getPosition().getZ());
+        Vector3 rayLigthDirection = Vector3(0,0,0); // todo 
+        if (normal.dot(rayLigthDirection) > 0 ){ //if (producto punto entre normal y dirección de la luz es positivo) {
+            //Calcular cuánta luz es bloqueada por sup.opacas y transp., y usarlo para escalar los términos difusos y especulares antes de añadirlos a color;
+        }
     }
     
     if (depth < scene.getMaxDepth()) {

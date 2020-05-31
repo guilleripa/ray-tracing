@@ -16,10 +16,10 @@ int main(int argc, char *argv[]) {
 
 	tinyxml2::XMLElement* node1 = doc.FirstChildElement("Scene")->FirstChildElement("Lights")->FirstChildElement("Ligth")->FirstChildElement("position");
 
-	int x = atoi(node1->FindAttribute("x")->Value());
+	float x = atoi(node1->FindAttribute("x")->Value());
 
-	float position1[4] = { x, x, x, x };
-	float color1[4] = { x, x, x, x };
+	Vector3 position1 = { x, x, x};
+	Vector3 color1 = { x, x, x };
 
 	Light light1 = Light(position1, color1);
 

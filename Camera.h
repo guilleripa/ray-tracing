@@ -1,26 +1,28 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "OpenGL-basico/Vector3.h"
+
 using namespace std;
 
 class Camera
 {
 private:
-	float eye[3] = { 0 };
-	float center[3] = { 0 };
-	float up[3] = { 0 };
+	Vector3 eye;
+	Vector3 center;
+	Vector3 up;
 
 public:
 	Camera();
-	Camera(float eye[], float center[], float up[]);
+	Camera(Vector3 eye, Vector3 center, Vector3 up);
 	~Camera();
 
-	float* getEye();
-	float* getCenter();
-	float* getUp();
-	void setEye(float[]);
-	void setCenter(float[]);
-	void setUp(float[]);
+	Vector3 getEye();
+	Vector3 getCenter();
+	Vector3 getUp();
+	void setEye(Vector3);
+	void setCenter(Vector3);
+	void setUp(Vector3);
 
 };
 

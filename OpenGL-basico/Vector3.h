@@ -17,6 +17,7 @@ public:
     void setX(float);
     void setY(float);
     void setZ(float);
+    float Vector3::dot(Vector3 v);
 };
 
 #endif // VECTOR_H

@@ -38,3 +38,10 @@ void Vector3::setY(float y) {
 void Vector3::setZ(float z) {
     this->z = z;
 }
+
+float Vector3::dot(Vector3 v)
+{
+    return this->x * v.x +
+        this->y * v.y +
+        this->z * v.z;
+}

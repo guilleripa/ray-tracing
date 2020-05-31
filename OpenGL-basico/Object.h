@@ -10,7 +10,6 @@ class Object
 private:
 	float refractiveCoefficient;
 	float reflectionCoefficient;
-	bool initialized;
 
 public:
 	Object();
@@ -18,7 +17,6 @@ public:
 
 	float getRefractiveCoefficient();
 	float getReflectionCoefficient();
-	bool getInitialized();
 
 	void setRefractiveCoefficient(float);
 	void setReflectionCoefficient(float);

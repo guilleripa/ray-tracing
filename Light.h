@@ -1,22 +1,24 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
+#include "OpenGL-basico/Vector3.h"
+
 using namespace std;
 
 class Light
 {
 private:
-	float position[4] = { 0 };
-	float color[4] = { 0 };
+	Vector3 position;
+	Vector3 color;
 public:
 	Light();
-	Light(float[], float[]);
+	Light(Vector3, Vector3);
 	~Light();
 
-	float* getPosition();
-	float* getColor();
-	void setPosition(float[]);
-	void setColor(float[]);
+	Vector3 getPosition();
+	Vector3 getColor();
+	void setPosition(Vector3);
+	void setColor(Vector3);
 
 };
 

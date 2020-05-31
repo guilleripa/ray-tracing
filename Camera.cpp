@@ -1,18 +1,10 @@
 #include "Camera.h"
 
-Camera::Camera(float eye[], float center[], float up[])
+Camera::Camera(Vector3 eye, Vector3 center, Vector3 up)
 {
-	this->eye[0] = eye[0];
-	this->eye[1] = eye[1];
-	this->eye[2] = eye[2];
-
-	this->center[0] = center[0];
-	this->center[1] = center[1];
-	this->center[2] = center[2];
-
-	this->up[0] = up[0];
-	this->up[1] = up[1];
-	this->up[2] = up[2];
+	this->eye = eye;
+	this->center = center;
+	this->up = up;
 
 }
 
@@ -22,32 +14,26 @@ Camera::Camera()
 Camera::~Camera()
 {}
 
-float* Camera::getEye() {
+Vector3 Camera::getEye() {
 	return eye;
 }
 
-float* Camera::getCenter() {
+Vector3 Camera::getCenter() {
 	return center;
 }
 
-float* Camera::getUp() {
+Vector3 Camera::getUp() {
 	return up;
 }
 
-void Camera::setEye(float eye[]) {
-	this->eye[0] = eye[0];
-	this->eye[1] = eye[1];
-	this->eye[2] = eye[2];
+void Camera::setEye(Vector3 eye) {
+	this->eye = eye;
 }
 
-void Camera::setCenter(float center[]) {
-	this->center[0] = center[0];
-	this->center[1] = center[1];
-	this->center[2] = center[2];
+void Camera::setCenter(Vector3 center) {
+	this->center = center;
 }
 
-void Camera::setUp(float up[]) {
-	this->up[0] = up[0];
-	this->up[1] = up[1];
-	this->up[2] = up[2];
+void Camera::setUp(Vector3 up) {
+	this->up = up;
 }
