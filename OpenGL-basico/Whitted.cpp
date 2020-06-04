@@ -14,13 +14,12 @@ float toDegrees(float radians) {
 
 void Whitted::run(Scene scene) {
 
-	//Seleccionar el centro de proyección y la ventana en el plano de vista ? ;
     float fov = 30; // todo configurable
-    float nearDistance = 5;
+    float nearDistance = 5; // todo configurable
     Vector3 eye = scene.getCamera().getEye();
     Vector3 pov = scene.getCamera().getCenter();
     Vector3 up = scene.getCamera().getUp().normalize();
-    Vector3 direction = (pov - eye).normalize(); // normalizado
+    Vector3 direction = (pov - eye).normalize();
 
     // http://www.lighthouse3d.com/tutorials/view-frustum-culling/view-frustums-shape/
     float WidthViewPlane = 2 * tan(toDegrees(fov / 2)) * nearDistance;
@@ -34,14 +33,14 @@ void Whitted::run(Scene scene) {
     Vector3 rayOrigin = Vector3(eye.getX(), eye.getY(), eye.getZ());
     vector<vector<Vector3>> pixels(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
 
-    float leftF = WidthViewPlane / (scene.getWidth() - 1);
-    float upF = HeightViewPlane / (scene.getHeight() - 1);
+    Vector3 leftOffset = left * (WidthViewPlane / (scene.getWidth() - 1));
+    Vector3 upOffset = up * (HeightViewPlane / (scene.getHeight() - 1));
 
     for (int j = 0; j < scene.getHeight(); ++j) {
         for (int i = 0; i < scene.getWidth(); ++i) {
-            // determinar rayo por centro de proyección y píxel;
-            Vector3 pixel = LeftTopPoint + ((up * -upF) * j) - ((left * leftF) * i);
-            Vector3 rayDirection = Vector3(0, 0, 0); // todo
+
+            Vector3 pixel = LeftTopPoint + (upOffset * j) - (leftOffset * i);
+            Vector3 rayDirection = (pixel - rayOrigin).normalize();
             // cout << "x " << pixel.getX() << " y " << pixel.getY() << " z " << pixel.getZ() << "\n";
            
             pixels[j][i] = trace(scene, rayOrigin, rayDirection, 1);
@@ -54,29 +53,26 @@ void Whitted::run(Scene scene) {
 
 Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int depth)
 {
-    //determinar la intersección más cercana de rayo con un objeto;
-    Object* object = intersection(scene, rayOrigin, rayDirection);
+
+    Vector3 pointOfIntersection;
+    Object* object = intersection(scene, rayOrigin, rayDirection, pointOfIntersection);
     if (object != NULL) {
-        Vector3 rayOrigin; // todo
-        Vector3 rayDirection; // todo
-        Vector3 intersection; // todo
-        Vector3 normal; // todo
-        //calcular la normal en la intersección;
-        //return shadow(obj.intersecado más cercano, rayo??, intersección, normal, depth);
-        return shadow(scene, object, rayOrigin, rayDirection, intersection, normal, depth);
+        Vector3 normal = object->getNormalIn(pointOfIntersection);
+        return shadow(scene, object, rayOrigin, rayDirection, pointOfIntersection, normal, depth);
     }
     else
         return scene.getBackgroundColor();
 }
 
 Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth)
-//Vector3 shadow(objeto, rayo, punto, normal, int profundidad)
 {
-    Vector3 color = Vector3(0, 0, 0); // todo término del ambiente??
+    Vector3 color = object->getColor() * scene.getAmbientLight();
     for (Light light : scene.getLights()) {
+        Vector3 shadowRayOrigin ;
+        Vector3 shadowRayDirection;
         //rayo_s = rayo desde el punto(intersection) a la luz;
-        Vector3 rayLigthDirection = Vector3(0,0,0); // todo 
-        if (normal.dot(rayLigthDirection) > 0 ){ //if (producto punto entre normal y dirección de la luz es positivo) {
+        Vector3 rayLigthDirection = (light.getPosition() - intersection).normalize(); // todo 
+        if (normal.dot(rayLigthDirection) > 0 ) {
             //Calcular cuánta luz es bloqueada por sup.opacas y transp., y usarlo para escalar los términos difusos y especulares antes de añadirlos a color; ?? 
         }
     }
@@ -103,15 +99,17 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
     return color;
 }
 
-Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection) {
-
+Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, Vector3 nearestPointOfIntersection) {
+    // todo estas cosas son punteros para poder modificar sino son copias por parametro
     float distanceMin = std::numeric_limits<float>::infinity();
     float distance = std::numeric_limits<float>::infinity();
     Object* nearestObject = NULL;
+    Vector3 pointOfIntersection;
     for (Object* object : scene.getObjects()) {
-        if (object->intersects(rayOrigin, rayDirection, distance) && distance < distanceMin) {
+        if (object->intersects(rayOrigin, rayDirection, distance, pointOfIntersection) && distance < distanceMin) {
             nearestObject = object;
             distanceMin = distance;
+            nearestPointOfIntersection = pointOfIntersection;
         }
     }
     return nearestObject;

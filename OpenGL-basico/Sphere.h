@@ -18,7 +18,8 @@ public:
 
 	Vector3 getCenter();
 	float getRadius();
-	bool intersects(Vector3 rayOrigin, Vector3 rayDirection, float distance);
+	bool intersects(Vector3 rayOrigin, Vector3 rayDirection, float distance, Vector3 pointOfIntersection);
+	Vector3 getNormalIn(Vector3 pointOfIntersection);
 
 };
 

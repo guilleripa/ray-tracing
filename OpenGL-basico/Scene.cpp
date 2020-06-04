@@ -15,6 +15,11 @@ int Scene::getMaxDepth() {
 	return maxDepth;
 }
 
+
+float Scene::getAmbientLight() {
+	return ambientLight;
+}
+
 Vector3 Scene::getBackgroundColor() {
 	return backgroundColor;
 }

@@ -12,9 +12,10 @@ using namespace std;
 class Scene
 {
 private:
-	int width = 10;
-	int height = 10;
+	int width = 100;
+	int height = 100;
 	int maxDepth = 4;
+	float ambientLight = 0.2;
 	Vector3 backgroundColor = Vector3(255, 0, 0);
 	vector<Object*> objects;
 	vector<Light> lights;
@@ -26,6 +27,7 @@ public:
 	int getWidth();
 	int getHeight();
 	int getMaxDepth();
+	float getAmbientLight();
 	Vector3 getBackgroundColor();
 	vector<Object*> getObjects();
 	vector<Light> getLights();

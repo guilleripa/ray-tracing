@@ -16,6 +16,10 @@ float Sphere::getRadius() {
 	return this->radius;
 }
 
-bool Sphere::intersects(Vector3 rayOrigin, Vector3 rayDirection, float distance) {
+bool Sphere::intersects(Vector3 rayOrigin, Vector3 rayDirection, float distance, Vector3 pointOfIntersection) {
 	return false;
+}
+
+Vector3 Sphere::getNormalIn(Vector3 pointOfIntersection) {
+	return (pointOfIntersection - center).normalize();
 }
