@@ -12,8 +12,8 @@ using namespace std;
 class Scene
 {
 private:
-	int width = 640;
-	int height = 400;
+	int width = 10;
+	int height = 10;
 	int maxDepth = 4;
 	Vector3 backgroundColor = Vector3(255, 0, 0);
 	vector<Object*> objects;

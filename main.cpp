@@ -23,7 +23,15 @@ int main(int argc, char *argv[]) {
 
 	Light light1 = Light(position1, color1);
 
+
+	Vector3 eye = Vector3(0, 0, 5);
+	Vector3 pov = Vector3(0, 0, 0);
+	Vector3 up = Vector3(0, 1, 0);
+
+	Camera camera = Camera(eye, pov, up);
+
 	Scene scene = Scene();
+	scene.setCamera(camera);
 
 	Whitted().run(scene);
 
