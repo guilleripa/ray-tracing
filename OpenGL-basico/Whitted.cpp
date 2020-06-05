@@ -71,7 +71,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
         Vector3 shadowRayOrigin ;
         Vector3 shadowRayDirection;
         //rayo_s = rayo desde el punto(intersection) a la luz;
-        Vector3 rayLigthDirection = (light.getPosition() - intersection).normalize(); // todo 
+        Vector3 rayLigthDirection = (light.getPosition() - intersection).normalize(); 
         if (normal.dot(rayLigthDirection) > 0 ) {
             //Calcular cuánta luz es bloqueada por sup.opacas y transp., y usarlo para escalar los términos difusos y especulares antes de añadirlos a color; ?? 
         }
