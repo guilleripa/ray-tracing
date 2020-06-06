@@ -12,8 +12,8 @@ using namespace std;
 class Scene
 {
 private:
-	int width = 640;
-	int height = 400;
+	int width = 1920;
+	int height = 1480;
 	int maxDepth = 4;
 	float ambientLight = 0.2;
 	Vector3 backgroundColor = Vector3(0, 0, 0);
