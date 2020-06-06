@@ -90,7 +90,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
             Vector3 pointOfIntersection;
             for (Object* otherObject : scene.getObjects()) {
                 if (otherObject != object) { // todo check
-                    otherObject->intersects(rayOrigin, rayDirection, &distance, &pointOfIntersection);
+                    otherObject->intersects(intersection, rayLightDirection, &distance, &pointOfIntersection);
 
                     if (distance + 0.001 < distanceToLight) { // todo 0.001
                         diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() /255);
@@ -103,8 +103,8 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
             Vector3 colorDiffuseLight = Vector3(light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2)));
 
             // Luz especular
-            Vector3 rayDirectionReflection = reflect(rayDirection, normal);
-            float internalReflectedProd = pow(rayLightDirection.dot(rayDirection), 25);
+            Vector3 rayDirectionReflection = reflect(rayLightDirection, normal);
+            float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30);
             Vector3 colorSpeculateLight = Vector3(0, 0, 0);
             if (internalReflectedProd > 0) {
                 colorSpeculateLight = Vector3(light.getColor() * internalReflectedProd * speculateFactor);
@@ -123,7 +123,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
             Vector3 rayDirectionReflection = reflect(rayDirection, normal);
             Vector3 colorR = trace(scene, intersection, rayDirectionReflection, depth + 1);
             colorReflection = colorR * object->getSpeculateCoefficient();
-
+            
         }
         if (object->getTransmissionCoefficient() > 0) {
             //float n2 = ;
@@ -153,7 +153,7 @@ Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirecti
         if (object->intersects(rayOrigin, rayDirection, &distance, &pointOfIntersection) && distance < distanceMin) {
             nearestObject = object;
             distanceMin = distance;
-            *nearestPointOfIntersection = pointOfIntersection - rayDirection * 0.001;
+            *nearestPointOfIntersection = pointOfIntersection - rayDirection * 0.000001;
         }
     }
     return nearestObject;
@@ -169,6 +169,5 @@ Vector3 Whitted::refract(Vector3 rayIncident, Vector3 normal, float eta)
 {
     eta = 2.0f - eta;
     float cosi = normal.dot(rayIncident);
-    Vector3 o = (rayIncident * eta - normal * (-cosi + eta * cosi));
-    return o;
+    return (rayIncident * eta - normal * (-cosi + eta * cosi)).normalize();
 }

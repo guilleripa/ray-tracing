@@ -29,9 +29,29 @@ void ImageIO::saveAsPng(Scene scene, vector<vector<Vector3>> pixels)
             BYTE* bits = FreeImage_GetScanLine(freeImageBitmap, y);
 
             for (unsigned int x = 0; x < FreeImage_GetWidth(freeImageBitmap); ++x) {
-                bits[FI_RGBA_RED] = pixels[y][x].getX();
-                bits[FI_RGBA_GREEN] = pixels[y][x].getY();
-                bits[FI_RGBA_BLUE] = pixels[y][x].getZ();
+                
+                if (pixels[y][x].getX() > 255) {
+                    bits[FI_RGBA_RED] = 255;
+                }
+                else {
+                    bits[FI_RGBA_RED] = pixels[y][x].getX();
+                }
+
+                if (pixels[y][x].getY() > 255) {
+                    bits[FI_RGBA_GREEN] = 255;
+                }
+                else {
+                    bits[FI_RGBA_GREEN] = pixels[y][x].getY();
+                }
+
+
+                if (pixels[y][x].getZ() > 255) {
+                    bits[FI_RGBA_BLUE] = 255;
+                }
+                else {
+                    bits[FI_RGBA_BLUE] = pixels[y][x].getZ();
+                }
+
                 bits[FI_RGBA_ALPHA] = 255;
 
                 bits += BYTESPP;
