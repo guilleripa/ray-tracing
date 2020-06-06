@@ -22,6 +22,7 @@ public:
     Vector3 normalize();
     Vector3 operator/(float k);
     Vector3 operator*(float k);
+    Vector3 operator*(Vector3 k);
     Vector3 operator-(Vector3 v);
     Vector3 operator+(Vector3 v);
     Vector3 cross(Vector3 v);

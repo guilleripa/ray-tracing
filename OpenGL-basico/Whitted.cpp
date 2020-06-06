@@ -55,7 +55,7 @@ Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int
 {
 
     Vector3 pointOfIntersection;
-    Object* object = intersection(scene, rayOrigin, rayDirection, pointOfIntersection);
+    Object* object = intersection(scene, rayOrigin, rayDirection, &pointOfIntersection);
     if (object != NULL) {
         Vector3 normal = object->getNormalIn(pointOfIntersection);
         return shadow(scene, object, rayOrigin, rayDirection, pointOfIntersection, normal, depth);
@@ -71,22 +71,19 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
     Vector3 colorDiffuse = Vector3(0, 0, 0);
     Vector3 colorSpeculate = Vector3(0, 0, 0);
     Vector3 colorRefraction = Vector3(0, 0, 0);
-    Vector3 colortransmission = Vector3(0, 0, 0);
+    Vector3 colorReflection = Vector3(0, 0, 0);
 
+    // todo sacar a metodo
     for (Light light : scene.getLights()) {
-        Vector3 rayLightDirection = (light.getPosition() - intersection).normalize(); 
-        float dotNormalLigth = normal.dot(rayLightDirection);
-        if (dotNormalLigth > 0 ) {
-            // Calcular cuánta luz es bloqueada por sup.opacas y transp., y usarlo para escalar los términos difusos y especulares antes de añadirlos a color; ??
+        Vector3 rayLightDirection = (intersection - light.getPosition()).normalize();
+        float dotNormalLight = normal.dot(rayLightDirection);
+
+        if (dotNormalLight > 0 ) {
 
             float distanceToLight = (light.getPosition() - intersection).mod();
 
-            float diffuseFactorR = object->getDiffuseCoefficient();
-            float diffuseFactorG = object->getDiffuseCoefficient();
-            float diffuseFactorB = object->getDiffuseCoefficient();
-            float speculateFactorR = object->getSpeculateCoefficient();
-            float speculateFactorG = object->getSpeculateCoefficient();
-            float speculateFactorB = object->getSpeculateCoefficient();
+            Vector3 diffuseFactor = Vector3(object->getDiffuseCoefficient(), object->getDiffuseCoefficient(), object->getDiffuseCoefficient());
+            Vector3 speculateFactor = Vector3(object->getSpeculateCoefficient(), object->getSpeculateCoefficient(), object->getSpeculateCoefficient());
 
             // Chequear si hay objetos en el medio
             float distance = std::numeric_limits<float>::infinity();
@@ -96,35 +93,25 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
                     otherObject->intersects(rayOrigin, rayDirection, &distance, &pointOfIntersection);
 
                     if (distance + 0.001 < distanceToLight) { // todo 0.001
-
-                        diffuseFactorR *= otherObject->getTransmissionCoefficient() * (otherObject->getColor().getX() / 255); // porque el / 255?
-                        diffuseFactorG *= otherObject->getTransmissionCoefficient() * (otherObject->getColor().getY() / 255);
-                        diffuseFactorB *= otherObject->getTransmissionCoefficient() * (otherObject->getColor().getZ() / 255);
-                        speculateFactorR *= otherObject->getSpeculateCoefficient() * (otherObject->getColor().getX() / 255);
-                        speculateFactorG *= otherObject->getSpeculateCoefficient() * (otherObject->getColor().getY() / 255);
-                        speculateFactorB *= otherObject->getSpeculateCoefficient() * (otherObject->getColor().getZ() / 255);
-
+                        diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() /255);
+                        speculateFactor = speculateFactor * otherObject->getSpeculateCoefficient() * (otherObject->getColor() / 255);
                     }
                 }
             }
 
             // Luz difusa
-            Vector3 colorDifusoEstaLuz = Vector3(light.getColor().getX() * object->getColor().getX() * diffuseFactorR * dotNormalLigth / (pow(distanceToLight, 2)),
-                                                 light.getColor().getY() * object->getColor().getY() * diffuseFactorG * dotNormalLigth / (pow(distanceToLight, 2)),
-                                                 light.getColor().getZ() * object->getColor().getZ() * diffuseFactorB * dotNormalLigth / (pow(distanceToLight, 2)));
+            Vector3 colorDiffuseLight = Vector3(light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2)));
 
             // Luz especular
-           /* Point luzReflejada = reflejar(direccionLuz * -1, normal);
-            float prodInternoReflejado = pow(luzReflejada.dotProduct(rayo->getDireccion() * -1), factorN);
-            Color colorEspecularEstaLuz = Color(0, 0, 0);
-            if (prodInternoReflejado > 0) {
-                colorEspecularEstaLuz = Color(luz->getColor().getR() * prodInternoReflejado * factorEspecularR,
-                    luz->getColor().getG() * prodInternoReflejado * factorEspecularG,
-                    luz->getColor().getB() * prodInternoReflejado * factorEspecularB);
-            }*/
+            Vector3 rayDirectionReflection = reflect(rayDirection, normal);
+            float internalReflectedProd = pow(rayLightDirection.dot(rayDirection), 25);
+            Vector3 colorSpeculateLight = Vector3(0, 0, 0);
+            if (internalReflectedProd > 0) {
+                colorSpeculateLight = Vector3(light.getColor() * internalReflectedProd * speculateFactor);
+            }
 
-            colorDiffuse = colorDiffuse + colorDifusoEstaLuz;
-            //colorSpeculate = colorSpeculate + colorEspecularEstaLuz;
+            colorDiffuse = colorDiffuse + colorDiffuseLight;
+            colorSpeculate = colorSpeculate + colorSpeculateLight;
            
         }
     }
@@ -132,26 +119,31 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
     if (depth < scene.getMaxDepth()) {
        
         if (object->getSpeculateCoefficient() > 0) {
-            Vector3 rayOriginReflection; // rayo_r = rayo en la dirección de reflexión desde punto;
-            Vector3 rayDirectionReflection;
-            Vector3 colorReflection = trace(scene, rayOriginReflection, rayDirectionReflection, depth + 1);
-            //escalar colorReflection por el coeficiente especular y añadir a color;
+            
+            Vector3 rayDirectionReflection = reflect(rayDirection, normal);
+            Vector3 colorR = trace(scene, intersection, rayDirectionReflection, depth + 1);
+            colorReflection = colorR * object->getSpeculateCoefficient();
+
         }
         if (object->getTransmissionCoefficient() > 0) {
-            //if (no ocurre la reflexión interna total) {
-                Vector3 rayOriginTransparent; // rayo_t = rayo en la dirección de refracción desde punto; */
-                Vector3 rayDirectionTransparent;
-                Vector3 colorTransparent = trace(scene, rayOriginTransparent, rayDirectionTransparent, depth + 1);
-                //escalar color_t por el coeficiente de transmisión y añadir a color;
+            //float n2 = ;
+            //float n1 = ;
+
+            //if (asin(n2 / n1)) { // (no ocurre la reflexión interna total)
+
+                Vector3 rayDirectionRefraction = refract(rayDirection, normal, object->getIndexRefraction());
+                Vector3 colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1);
+                colorRefraction = colorT * object->getTransmissionCoefficient();
+
             //}
         }
        
     }
 
-    return colorAmbience + colorDiffuse + colorSpeculate + colorRefraction + colortransmission;
+    return colorAmbience + colorDiffuse + colorSpeculate + colorRefraction + colorReflection;
 }
 
-Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, Vector3 nearestPointOfIntersection) {
+Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, Vector3* nearestPointOfIntersection) {
 
     float distanceMin = std::numeric_limits<float>::infinity();
     float distance = std::numeric_limits<float>::infinity();
@@ -161,8 +153,22 @@ Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirecti
         if (object->intersects(rayOrigin, rayDirection, &distance, &pointOfIntersection) && distance < distanceMin) {
             nearestObject = object;
             distanceMin = distance;
-            nearestPointOfIntersection = pointOfIntersection;
+            *nearestPointOfIntersection = pointOfIntersection - rayDirection * 0.001;
         }
     }
     return nearestObject;
+}
+
+// http://paulbourke.net/geometry/reflected/
+Vector3 Whitted::reflect(Vector3 rayIncident, Vector3 normal) {
+    return (rayIncident - normal * rayIncident.dot(normal) * 2).normalize();
+}
+
+// https://stackoverflow.com/questions/42218704/how-to-properly-handle-refraction-in-raytracing
+Vector3 Whitted::refract(Vector3 rayIncident, Vector3 normal, float eta)
+{
+    eta = 2.0f - eta;
+    float cosi = normal.dot(rayIncident);
+    Vector3 o = (rayIncident * eta - normal * (-cosi + eta * cosi));
+    return o;
 }

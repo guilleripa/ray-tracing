@@ -13,7 +13,9 @@ public:
 	void run(Scene scene);
 	Vector3 trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int depth);
 	Vector3 shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth);
-	Object* intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, Vector3 pointOfIntersection);
+	Object* intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, /*Vector3* pointOfIntersection,*/ Vector3* nearestPointOfIntersection);
+	Vector3 reflect(Vector3 rayIncident, Vector3 normal);
+	Vector3 refract(Vector3 rayIncident, Vector3 normal, float eta);
 };
 
 #endif // WHITTED_H

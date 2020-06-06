@@ -16,7 +16,7 @@ private:
 	int height = 400;
 	int maxDepth = 4;
 	float ambientLight = 0.2;
-	Vector3 backgroundColor = Vector3(255, 0, 0);
+	Vector3 backgroundColor = Vector3(0, 0, 0);
 	vector<Object*> objects;
 	vector<Light> lights;
 	Camera camera;

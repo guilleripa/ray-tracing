@@ -59,6 +59,11 @@ Vector3 Vector3::operator*(float k)
     return Vector3(this->getX() * k, this->getY() * k, this->getZ() * k);
 }
 
+Vector3 Vector3::operator*(Vector3 k)
+{
+    return Vector3(this->getX() * k.getX(), this->getY() * k.getY(), this->getZ() * k.getZ());
+}
+
 Vector3 Vector3::operator/(float k) {
     return *this * (1.0 / k);
 }
