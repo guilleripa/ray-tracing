@@ -8,20 +8,29 @@ using namespace std;
 class Object
 {
 private:
-	float refractiveCoefficient;
-	float reflectionCoefficient;
+	float ambienceCoefficient;
+	float transmissionCoefficient;
+	float speculateCoefficient;
+	float diffuseCoefficient;
+	float indexRefraction;
 	Vector3 color;
 
 public:
 	Object();
-	Object(float refractiveCoefficient, float reflectionCoefficient, Vector3 color);
+	Object(float ambienceCoefficient, float transmissionCoefficient, float speculateCoefficient, float diffuseCoefficient, float indexRefraction, Vector3 color);
 
-	float getRefractiveCoefficient();
-	float getReflectionCoefficient();
+	float getAmbienceCoefficient();
+	float getTransmissionCoefficient();
+	float getSpeculateCoefficient();
+	float getDiffuseCoefficient();
+	float getIndexRefraction();
 	Vector3 getColor();
 
-	void setRefractiveCoefficient(float);
-	void setReflectionCoefficient(float);
+	void setAmbienceCoefficient(float);
+	void setTransmissionCoefficient(float);
+	void setSpeculateCoefficient(float);
+	void setDiffuseCoefficient(float);
+	void setIndexRefraction(float);
 	void setColor(Vector3 color);
 
 	virtual bool intersects(Vector3 rayOrigin, Vector3 rayDirection, float* distance, Vector3* pointOfIntersection) = 0;

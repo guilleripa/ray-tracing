@@ -4,8 +4,8 @@
 Sphere::Sphere()
 {}
 
-Sphere::Sphere(Vector3 center, float radius, float refractiveCoefficient, float reflectionCoefficient, Vector3 color) 
-	: Object(refractiveCoefficient, reflectionCoefficient, color) {
+Sphere::Sphere(Vector3 center, float radius, float ambienceCoefficient, float transmissionCoefficient, float speculateCoefficient, float diffuseCoefficient, float indexRefraction, Vector3 color)
+	: Object(ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color) {
 	this->center = center;
 	this->radius = radius;
 }

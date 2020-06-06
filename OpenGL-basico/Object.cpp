@@ -4,30 +4,39 @@ Object::Object()
 {
 }
 
-Object::Object(float refractiveCoefficient, float reflectionCoefficient, Vector3 color){
-	this->refractiveCoefficient = refractiveCoefficient;
-	this->reflectionCoefficient = reflectionCoefficient;
+Object::Object(float ambienceCoefficient, float transmissionCoefficient, float speculateCoefficient, float diffuseCoefficient, float indexRefraction, Vector3 color){
+	this->ambienceCoefficient = ambienceCoefficient;
+	this->transmissionCoefficient = transmissionCoefficient;
+	this->speculateCoefficient = speculateCoefficient;
+	this->diffuseCoefficient = diffuseCoefficient;
+	this->indexRefraction = indexRefraction;
 	this->color = color;
 }
 
-float Object::getRefractiveCoefficient() {
-	return this->refractiveCoefficient;
+float Object::getAmbienceCoefficient() {
+	return this->ambienceCoefficient;
 }
 
-float Object::getReflectionCoefficient() {
-	return this->reflectionCoefficient;
+float Object::getTransmissionCoefficient() {
+	return this->transmissionCoefficient;
+}
+
+float Object::getSpeculateCoefficient() {
+	return this->speculateCoefficient;
+}
+
+
+float Object::getDiffuseCoefficient() {
+	return this->diffuseCoefficient;
+}
+
+
+float Object::getIndexRefraction() {
+	return this->indexRefraction;
 }
 
 Vector3 Object::getColor() {
 	return this->color;
-}
-
-void Object::setRefractiveCoefficient(float refractiveCoefficient) {
-	this->refractiveCoefficient = refractiveCoefficient;
-}
-
-void Object::setReflectionCoefficient(float reflectionCoefficient) {
-	this->reflectionCoefficient = reflectionCoefficient;
 }
 
 void Object::setColor(Vector3 color) {

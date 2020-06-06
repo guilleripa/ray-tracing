@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 	float x = atoi(node1->FindAttribute("x")->Value());
 
 	Vector3 position1 = { x, x, x};
-	Vector3 color1 = { x, x, x };
+	Vector3 color1 = { 255, 255, 255 };
 
 	Light light1 = Light(position1, color1);
 
@@ -30,15 +30,18 @@ int main(int argc, char *argv[]) {
 	Vector3 up = Vector3(0, 1, 0);
 
 	Camera camera = Camera(eye, pov, up);
-
-	Sphere* sphere = new Sphere(Vector3(0, 0, 0), 1.0, 0.4, 0.4, Vector3(0, 100, 255));
+	Sphere* sphere = new Sphere(Vector3(0, 0, 0), 1.0, 0.4, 0.4, 0.1, 0.2, 0.9, Vector3(0, 100, 255));
 
 	vector<Object*> objects;
 	objects.push_back(sphere);
+
+	vector<Light> lights;
+	lights.push_back(light1);
+
 	Scene scene = Scene();
 	scene.setObjects(objects);
 	scene.setCamera(camera);
-
+	scene.setLights(lights);
 	Whitted().run(scene);
 
 	return 0;
