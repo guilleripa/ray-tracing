@@ -24,8 +24,8 @@ public:
 	void setReflectionCoefficient(float);
 	void setColor(Vector3 color);
 
-	virtual bool intersects(Vector3 rayOrigin, Vector3 rayDirection, float distance, Vector3 pointOfIntersection) const = 0;
-	virtual Vector3 getNormalIn(Vector3 pointOfIntersection) const = 0;
+	virtual bool intersects(Vector3 rayOrigin, Vector3 rayDirection, float* distance, Vector3* pointOfIntersection) = 0;
+	virtual Vector3 getNormalIn(Vector3 pointOfIntersection) = 0;
 
 };
 

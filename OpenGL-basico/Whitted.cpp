@@ -15,7 +15,7 @@ float toDegrees(float radians) {
 void Whitted::run(Scene scene) {
 
     float fov = 30; // todo configurable
-    float nearDistance = 5; // todo configurable
+    float nearDistance = 2; // todo configurable
     Vector3 eye = scene.getCamera().getEye();
     Vector3 pov = scene.getCamera().getCenter();
     Vector3 up = scene.getCamera().getUp().normalize();
@@ -39,9 +39,9 @@ void Whitted::run(Scene scene) {
     for (int j = 0; j < scene.getHeight(); ++j) {
         for (int i = 0; i < scene.getWidth(); ++i) {
 
-            Vector3 pixel = LeftTopPoint + (upOffset * j) - (leftOffset * i);
+            Vector3 pixel = LeftTopPoint - (upOffset * j) - (leftOffset * i);
             Vector3 rayDirection = (pixel - rayOrigin).normalize();
-            // cout << "x " << pixel.getX() << " y " << pixel.getY() << " z " << pixel.getZ() << "\n";
+            //cout << "x " << pixel.getX() << " y " << pixel.getY() << " z " << pixel.getZ() << "\n";
            
             pixels[j][i] = trace(scene, rayOrigin, rayDirection, 1);
         }
@@ -106,7 +106,7 @@ Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirecti
     Object* nearestObject = NULL;
     Vector3 pointOfIntersection;
     for (Object* object : scene.getObjects()) {
-        if (object->intersects(rayOrigin, rayDirection, distance, pointOfIntersection) && distance < distanceMin) {
+        if (object->intersects(rayOrigin, rayDirection, &distance, &pointOfIntersection) && distance < distanceMin) {
             nearestObject = object;
             distanceMin = distance;
             nearestPointOfIntersection = pointOfIntersection;

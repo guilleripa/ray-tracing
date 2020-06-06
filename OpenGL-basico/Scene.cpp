@@ -52,6 +52,14 @@ void Scene::setBackgroundColor(Vector3 backgroundColor) {
 	this->backgroundColor = backgroundColor;
 }
 
+void Scene::setObjects(vector<Object*> objects) {
+	this->objects = objects;
+}
+
+void Scene::setLights(vector<Light> lights) {
+	this->lights = lights;
+}
+
 void Scene::setCamera(Camera camera) {
 	this->camera = camera;
 }
