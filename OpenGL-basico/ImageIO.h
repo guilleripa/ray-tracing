@@ -15,7 +15,8 @@ private:
 
 
 public:
-	void ImageIO::saveAsPng(Scene scene, vector<vector<Vector3>> pixels);
+	void saveAsPng(Scene scene, vector<vector<Vector3>> pixels, vector<vector<Vector3>> pixelsReflection, vector<vector<Vector3>> pixelsTransmision);
+	void saveAsPng(Scene scene, vector<vector<Vector3>> pixels, string path);
 
 };
 

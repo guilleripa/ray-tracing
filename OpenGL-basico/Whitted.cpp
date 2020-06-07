@@ -32,6 +32,8 @@ void Whitted::run(Scene scene) {
 
     Vector3 rayOrigin = Vector3(eye.getX(), eye.getY(), eye.getZ());
     vector<vector<Vector3>> pixels(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
+    vector<vector<Vector3>> pixelsReflection(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
+    vector<vector<Vector3>> pixelsTransmision(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
 
     Vector3 leftOffset = left * (WidthViewPlane / (scene.getWidth() - 1));
     Vector3 upOffset = up * (HeightViewPlane / (scene.getHeight() - 1));
@@ -41,27 +43,34 @@ void Whitted::run(Scene scene) {
 
             Vector3 pixel = LeftTopPoint - (upOffset * j) - (leftOffset * i);
             Vector3 rayDirection = (pixel - rayOrigin).normalize();
-            //cout << "x " << pixel.getX() << " y " << pixel.getY() << " z " << pixel.getZ() << "\n";
-           
-            pixels[j][i] = trace(scene, rayOrigin, rayDirection, 1);
+
+            vector<Vector3> pixelsVector = trace(scene, rayOrigin, rayDirection, 1);
+            pixels[j][i] = pixelsVector[0];
+            pixelsReflection[j][i] = pixelsVector[1];
+            pixelsTransmision[j][i] = pixelsVector[2];
         }
     }
 
-    ImageIO().saveAsPng(scene, pixels);
-
+    ImageIO().saveAsPng(scene, pixels, pixelsReflection, pixelsTransmision);
 }
 
-Vector3 Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int depth)
+vector<Vector3> Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int depth )
 {
-
+    vector<Vector3> result(3, Vector3());
     Vector3 pointOfIntersection;
     Object* object = intersection(scene, rayOrigin, rayDirection, &pointOfIntersection);
     if (object != NULL) {
         Vector3 normal = object->getNormalIn(pointOfIntersection);
-        return shadow(scene, object, rayOrigin, rayDirection, pointOfIntersection, normal, depth);
+        result[0] = shadow(scene, object, rayOrigin, rayDirection, pointOfIntersection, normal, depth);
+        result[1] = Vector3(object->getSpeculateCoefficient() * 255, object->getSpeculateCoefficient() * 255, object->getSpeculateCoefficient() * 255);
+        result[2] = Vector3(object->getTransmissionCoefficient() * 255, object->getTransmissionCoefficient() * 255, object->getTransmissionCoefficient() * 255);
     }
-    else
-        return scene.getBackgroundColor();
+    else {
+        result[0] = scene.getBackgroundColor();
+        result[1] = Vector3(0, 0, 0);
+        result[2] = Vector3(0, 0, 0);
+    }
+    return result;
 }
 
 Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth)
@@ -73,7 +82,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
     Vector3 colorRefraction = Vector3(0, 0, 0);
     Vector3 colorReflection = Vector3(0, 0, 0);
 
-    // todo sacar a metodo
+    // todo separar a metodo
     for (Light light : scene.getLights()) {
         Vector3 rayLightDirection = (intersection - light.getPosition()).normalize();
         float dotNormalLight = normal.dot(rayLightDirection);
@@ -85,55 +94,51 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
             Vector3 diffuseFactor = Vector3(object->getDiffuseCoefficient(), object->getDiffuseCoefficient(), object->getDiffuseCoefficient());
             Vector3 speculateFactor = Vector3(object->getSpeculateCoefficient(), object->getSpeculateCoefficient(), object->getSpeculateCoefficient());
 
-            // Chequear si hay objetos en el medio
+            // Para cada objeto en el medio
             float distance = std::numeric_limits<float>::infinity();
             Vector3 pointOfIntersection;
             for (Object* otherObject : scene.getObjects()) {
-                if (otherObject != object) { // todo check
-                    otherObject->intersects(intersection, rayLightDirection, &distance, &pointOfIntersection);
-
-                    if (distance + 0.001 < distanceToLight) { // todo 0.001
+                if (otherObject != object) {
+                    
+                    if (otherObject->intersects(light.getPosition(), rayLightDirection, &distance, &pointOfIntersection) && distance + 0.001 < distanceToLight) {
                         diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() /255);
                         speculateFactor = speculateFactor * otherObject->getSpeculateCoefficient() * (otherObject->getColor() / 255);
                     }
                 }
             }
 
-            // Luz difusa
-            Vector3 colorDiffuseLight = Vector3(light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2)));
-
-            // Luz especular
             Vector3 rayDirectionReflection = reflect(rayLightDirection, normal);
             float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30);
             Vector3 colorSpeculateLight = Vector3(0, 0, 0);
             if (internalReflectedProd > 0) {
                 colorSpeculateLight = Vector3(light.getColor() * internalReflectedProd * speculateFactor);
             }
-
-            colorDiffuse = colorDiffuse + colorDiffuseLight;
             colorSpeculate = colorSpeculate + colorSpeculateLight;
+
+            Vector3 colorDiffuseLight = Vector3(light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2)));
+            colorDiffuse = colorDiffuse + colorDiffuseLight;
            
         }
     }
     
     if (depth < scene.getMaxDepth()) {
        
-        if (object->getSpeculateCoefficient() > 0) {
+        if (object->getSpeculateCoefficient() > 0) { // objeto es reflejante
             
             Vector3 rayDirectionReflection = reflect(rayDirection, normal);
-            Vector3 colorR = trace(scene, intersection, rayDirectionReflection, depth + 1);
-            colorReflection = colorR * object->getSpeculateCoefficient();
+            vector<Vector3> colorR = trace(scene, intersection, rayDirectionReflection, depth + 1);
+            colorReflection = colorR[0] * object->getSpeculateCoefficient();
             
         }
-        if (object->getTransmissionCoefficient() > 0) {
+        if (object->getTransmissionCoefficient() > 0) { // objeto es transparente
             //float n2 = ;
             //float n1 = ;
 
             //if (asin(n2 / n1)) { // (no ocurre la reflexión interna total)
 
                 Vector3 rayDirectionRefraction = refract(rayDirection, normal, object->getIndexRefraction());
-                Vector3 colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1);
-                colorRefraction = colorT * object->getTransmissionCoefficient();
+                vector<Vector3> colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1);
+                colorRefraction = colorT[0] * object->getTransmissionCoefficient();
 
             //}
         }
