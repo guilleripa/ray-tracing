@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
 	float x = atoi(node1->FindAttribute("x")->Value());
 
-	Vector3 position1 = { -4, 1, 8};
+	Vector3 position1 = { 5, 1, 5};
 	Vector3 color1 = { 250, 250, 250 };
 
 	//Vector3 position2 = { -5, 0, 3 };
@@ -28,13 +28,17 @@ int main(int argc, char *argv[]) {
 	Light light1 = Light(position1, color1);
 	//Light light2 = Light(position1, color1);
 
-	Vector3 eye = Vector3(0, 0, 20);
+	Vector3 eye = Vector3(0, -5, 20);
 	Vector3 pov = Vector3(0, 0, 0);
 	Vector3 up = Vector3(0, 1, 0);
 
 	Camera camera = Camera(eye, pov, up);
-	Sphere* sphere1 = new Sphere(Vector3(0, 0, 0), 1.0, 0.1, 0.9, 0.9, 0.1, 0.5, Vector3(0, 100, 255));
-	Sphere* sphere2 = new Sphere(Vector3(2, 0, 2), 1.0, 0.3, 0.7, 0.8, 0.2, 2.0, Vector3(0, 255, 0));
+
+	//coefAmbiente = "0.1" coefTransmision = "0" coefEspecular = "1" coefDifuso = "0"  indiceRefraccion = "0"> < / esfera>
+	//coefAmbiente = "0.3" coefTransmision = "0.7" coefEspecular = "0" coefDifuso = "0"  indiceRefraccion = "1.3"> < / esfera>
+
+	Sphere* sphere1 = new Sphere(Vector3(0, 0, 0), 2.0, 0.1, 0.1, 1, 0.1, 0.1, Vector3(0, 100, 255));
+	Sphere* sphere2 = new Sphere(Vector3(3, 0, 3), 1.0, 0.1, 0.1, 2, 0.1, 0.1, Vector3(10, 255, 10));
 	//Sphere* sphere3 = new Sphere(Vector3(2, 0, 2), 2.0, 0.3, 0.7, 2, 0, 3.0, Vector3(255, 0, 0));
 
 	vector<Object*> objects;
