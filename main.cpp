@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
 	float x = atoi(node1->FindAttribute("x")->Value());
 
-	Vector3 position1 = { -4, 1, 8};
+	Vector3 position1 = { 5, 0, 5};
 	Vector3 color1 = { 250, 250, 250 };
 
 	//Vector3 position2 = { -5, 0, 3 };
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
 	Camera camera = Camera(eye, pov, up);
 	Sphere* sphere1 = new Sphere(Vector3(0, 0, 0), 1.0, 0.1, 0.9, 0.9, 0.1, 0.5, Vector3(0, 100, 255));
-	Sphere* sphere2 = new Sphere(Vector3(2, 0, 2), 1.0, 0.3, 0.7, 0.8, 0.2, 2.0, Vector3(0, 255, 0));
+	Sphere* sphere2 = new Sphere(Vector3(1, 0, 2), 1.0, 0, 1, 0.8, 0.2, 0, Vector3(10, 10, 10));
 	//Sphere* sphere3 = new Sphere(Vector3(2, 0, 2), 2.0, 0.3, 0.7, 2, 0, 3.0, Vector3(255, 0, 0));
 
 	vector<Object*> objects;
