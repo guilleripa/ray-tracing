@@ -77,7 +77,7 @@ Scene Scene::loadScene() {
 
 	tinyxml2::XMLError error = doc.LoadFile("../OpenGL-basico/Scene.xml");
 
-	if (error != 0) throw ;
+	if (error != 0) throw 6;
 
 	tinyxml2::XMLElement* sceneNode = doc.FirstChildElement("Scene");
 	int width = atoi(sceneNode->FindAttribute("width")->Value());
@@ -93,13 +93,15 @@ Scene Scene::loadScene() {
 
 	// camara
 	tinyxml2::XMLElement* cameraNode = sceneNode->FirstChildElement("Camera");
+	int fov = atoi(cameraNode->FindAttribute("fov")->Value());
+	int nearDistance = atoi(cameraNode->FindAttribute("nearDistance")->Value());
 	tinyxml2::XMLElement* eyeNode = cameraNode->FirstChildElement("eye");
 	tinyxml2::XMLElement* povNode = cameraNode->FirstChildElement("pov");
 	tinyxml2::XMLElement* upNode = cameraNode->FirstChildElement("up");
 	Vector3 eye = Vector3(atoi(eyeNode->FindAttribute("x")->Value()), atoi(eyeNode->FindAttribute("y")->Value()), atoi(eyeNode->FindAttribute("z")->Value()));
 	Vector3 pov = Vector3(atoi(povNode->FindAttribute("x")->Value()), atoi(povNode->FindAttribute("y")->Value()), atoi(povNode->FindAttribute("z")->Value()));
 	Vector3 up = Vector3(atoi(upNode->FindAttribute("x")->Value()), atoi(upNode->FindAttribute("y")->Value()), atoi(upNode->FindAttribute("z")->Value()));
-	scene.setCamera(Camera(eye, pov, up));
+	scene.setCamera(Camera(fov, nearDistance, eye, pov, up));
 
 	//luces
 	vector<Light> lights;
@@ -112,7 +114,6 @@ Scene Scene::loadScene() {
 		lights.push_back(Light(position, color));
 	}
 	scene.setLights(lights);
-
 
 	//objetos
 	vector<Object*> objects;

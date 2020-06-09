@@ -1,7 +1,9 @@
 #include "Camera.h"
 
-Camera::Camera(Vector3 eye, Vector3 pov, Vector3 up)
+Camera::Camera(int fov, int nearDistance, Vector3 eye, Vector3 pov, Vector3 up)
 {
+	this->fov = fov;
+	this->nearDistance = nearDistance;
 	this->eye = eye;
 	this->pov = pov;
 	this->up = up;
@@ -14,6 +16,14 @@ Camera::Camera()
 Camera::~Camera()
 {}
 
+int Camera::getFov() {
+	return fov;
+}
+
+int Camera::getNearDistance() {
+	return nearDistance;
+}
+
 Vector3 Camera::getEye() {
 	return eye;
 }
@@ -24,6 +34,14 @@ Vector3 Camera::getPov() {
 
 Vector3 Camera::getUp() {
 	return up;
+}
+
+void Camera::setFov(int fov) {
+	this->fov = fov;
+}
+
+void Camera::setNearDistance(int nearDistance) {
+	this->nearDistance = nearDistance;
 }
 
 void Camera::setEye(Vector3 eye) {

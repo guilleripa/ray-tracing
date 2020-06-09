@@ -14,8 +14,8 @@ float toDegrees(float radians) {
 
 void Whitted::run(Scene scene) {
 
-    float fov = 30; // todo configurable
-    float nearDistance = 2; // todo configurable
+    int fov = scene.getCamera().getFov();
+    int nearDistance = scene.getCamera().getNearDistance();
     Vector3 eye = scene.getCamera().getEye();
     Vector3 pov = scene.getCamera().getPov();
     Vector3 up = scene.getCamera().getUp().normalize();
@@ -108,7 +108,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
             }
 
             Vector3 rayDirectionReflection = reflect(rayLightDirection, normal);
-            float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30);
+            float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30); // todo investigar este numero
             Vector3 colorSpeculateLight = Vector3(0, 0, 0);
             if (internalReflectedProd > 0) {
                 colorSpeculateLight = Vector3(light.getColor() * internalReflectedProd * speculateFactor);
