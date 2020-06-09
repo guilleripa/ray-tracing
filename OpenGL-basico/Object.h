@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#define ZERO 0.0001
+
 class Object
 {
 private:
