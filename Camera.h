@@ -8,18 +8,25 @@ using namespace std;
 class Camera
 {
 private:
+	int fov;
+	int nearDistance;
 	Vector3 eye;
 	Vector3 pov;
 	Vector3 up;
 
 public:
 	Camera();
-	Camera(Vector3 eye, Vector3 pov, Vector3 up);
+	Camera(int fov, int nearDistance, Vector3 eye, Vector3 pov, Vector3 up);
 	~Camera();
 
+	int getFov();
+	int getNearDistance();
 	Vector3 getEye();
 	Vector3 getPov();
 	Vector3 getUp();
+
+	void setFov(int);
+	void setNearDistance(int);
 	void setEye(Vector3);
 	void setPov(Vector3);
 	void setUp(Vector3);

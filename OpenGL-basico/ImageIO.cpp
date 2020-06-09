@@ -15,19 +15,28 @@ void ImageIO::saveAsPng(Scene scene, vector<vector<Vector3>> pixels, vector<vect
     strftime(buffer, sizeof(buffer), "%d-%m-%Y %H.%M.%S", &timeinfo);
     std::string path(buffer);
 
-    string pathFolder = "Historial/" + path;
-    
-    // todo si ya existe no crear o seguir de largo
-    if (_mkdir(pathFolder.c_str())) {
+    string folder = "Historial";
+    _mkdir(folder.c_str());
+    if (errno == ENOENT) {
         throw 1;
-    } else
-    {
-
-        saveAsPng(scene, pixels, pathFolder + "/Escena.png");
-        saveAsPng(scene, pixelsReflection, pathFolder + "/Reflection.png");
-        saveAsPng(scene, pixelsTransmision, pathFolder + "/Transmision.png");
-
     }
+    else
+    {
+        string pathFolder = "Historial/" + path;
+        _mkdir(pathFolder.c_str());
+        if (errno == ENOENT) {
+            throw 1;
+        }
+        else
+        {
+            saveAsPng(scene, pixels, pathFolder + "/Escena.png");
+            saveAsPng(scene, pixelsReflection, pathFolder + "/Reflection.png");
+            saveAsPng(scene, pixelsTransmision, pathFolder + "/Transmision.png");
+
+        }
+    }
+    
+
 
 }
 
