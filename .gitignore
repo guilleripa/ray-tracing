@@ -22,7 +22,4 @@
 /Freeimage/.vs/Freeimage/v16/Browse.VC.db
 /Freeimage/.vs/Freeimage/v16/.suo
 /OpenGL-basico/Historial/**
-/OpenGL-basico/Debug/Sphere.obj
-/OpenGL-basico/Debug/Table.obj
-/OpenGL-basico/Debug/ImageIO.obj
-/OpenGL-basico/Debug/Cylinder.obj
+/OpenGL-basico/Debug/*.obj

@@ -2,10 +2,10 @@
 #include "../tinyxml2.h"
 #include "OpenGL-basico/Whitted.h"
 
+
 using namespace std;
 
 int main(int argc, char *argv[]) {
-
 	try {
 		Scene scene = Scene().loadScene();
 		Whitted().run(scene);
