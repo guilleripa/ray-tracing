@@ -40,7 +40,7 @@ vector<Light> Scene::getLights() {
 	return lights;
 }
 
-Camera Scene::getCamera() {
+Camera* Scene::getCamera() {
 	return camera;
 }
 
@@ -68,7 +68,7 @@ void Scene::setLights(vector<Light> lights) {
 	this->lights = lights;
 }
 
-void Scene::setCamera(Camera camera) {
+void Scene::setCamera(Camera* camera) {
 	this->camera = camera;
 }
 
@@ -101,7 +101,7 @@ Scene Scene::loadScene() {
 	Vector3 eye = Vector3(atoi(eyeNode->FindAttribute("x")->Value()), atoi(eyeNode->FindAttribute("y")->Value()), atoi(eyeNode->FindAttribute("z")->Value()));
 	Vector3 pov = Vector3(atoi(povNode->FindAttribute("x")->Value()), atoi(povNode->FindAttribute("y")->Value()), atoi(povNode->FindAttribute("z")->Value()));
 	Vector3 up = Vector3(atoi(upNode->FindAttribute("x")->Value()), atoi(upNode->FindAttribute("y")->Value()), atoi(upNode->FindAttribute("z")->Value()));
-	scene.setCamera(Camera(fov, nearDistance, eye, pov, up));
+	scene.setCamera(new Camera(fov, nearDistance, eye, pov, up));
 
 	//luces
 	vector<Light> lights;

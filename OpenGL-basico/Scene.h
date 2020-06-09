@@ -19,7 +19,7 @@ private:
 	Vector3 backgroundColor = Vector3(0, 0, 0);
 	vector<Object*> objects;
 	vector<Light> lights;
-	Camera camera;
+	Camera* camera;
 
 public:
 	Scene();
@@ -32,7 +32,7 @@ public:
 	Vector3 getBackgroundColor();
 	vector<Object*> getObjects();
 	vector<Light> getLights();
-	Camera getCamera();
+	Camera* getCamera();
 
 	Scene loadScene();
 
@@ -42,7 +42,7 @@ public:
 	void setBackgroundColor(Vector3);
 	void setObjects(vector<Object*>);
 	void setLights(vector<Light>);
-	void setCamera(Camera);
+	void setCamera(Camera*);
 };
 
 #endif // SCENE_H
