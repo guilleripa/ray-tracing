@@ -108,7 +108,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
             }
 
             Vector3 rayDirectionReflection = reflect(rayLightDirection, normal);
-            float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30);
+            float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30); // todo investigar este numero
             Vector3 colorSpeculateLight = Vector3(0, 0, 0);
             if (internalReflectedProd > 0) {
                 colorSpeculateLight = Vector3(light.getColor() * internalReflectedProd * speculateFactor);

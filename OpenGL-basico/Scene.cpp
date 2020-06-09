@@ -77,7 +77,7 @@ Scene Scene::loadScene() {
 
 	tinyxml2::XMLError error = doc.LoadFile("../OpenGL-basico/Scene.xml");
 
-	if (error != 0) throw ;
+	if (error != 0) throw 6;
 
 	tinyxml2::XMLElement* sceneNode = doc.FirstChildElement("Scene");
 	int width = atoi(sceneNode->FindAttribute("width")->Value());
