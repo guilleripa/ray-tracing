@@ -14,7 +14,7 @@ float toDegrees(float radians) {
 
 void Whitted::run(Scene scene) {
 
-    int fov = 30;// scene.getCamera().getFov();
+    int fov = scene.getCamera()->getFov();
     int nearDistance = scene.getCamera()->getNearDistance();
     Vector3 eye = scene.getCamera()->getEye();
     Vector3 pov = scene.getCamera()->getPov();
