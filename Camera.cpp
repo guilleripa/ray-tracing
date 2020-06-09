@@ -1,9 +1,9 @@
 #include "Camera.h"
 
-Camera::Camera(Vector3 eye, Vector3 center, Vector3 up)
+Camera::Camera(Vector3 eye, Vector3 pov, Vector3 up)
 {
 	this->eye = eye;
-	this->center = center;
+	this->pov = pov;
 	this->up = up;
 
 }
@@ -18,8 +18,8 @@ Vector3 Camera::getEye() {
 	return eye;
 }
 
-Vector3 Camera::getCenter() {
-	return center;
+Vector3 Camera::getPov() {
+	return pov;
 }
 
 Vector3 Camera::getUp() {
@@ -30,8 +30,8 @@ void Camera::setEye(Vector3 eye) {
 	this->eye = eye;
 }
 
-void Camera::setCenter(Vector3 center) {
-	this->center = center;
+void Camera::setPov(Vector3 pov) {
+	this->pov = pov;
 }
 
 void Camera::setUp(Vector3 up) {

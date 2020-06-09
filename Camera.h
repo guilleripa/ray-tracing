@@ -9,19 +9,19 @@ class Camera
 {
 private:
 	Vector3 eye;
-	Vector3 center;
+	Vector3 pov;
 	Vector3 up;
 
 public:
 	Camera();
-	Camera(Vector3 eye, Vector3 center, Vector3 up);
+	Camera(Vector3 eye, Vector3 pov, Vector3 up);
 	~Camera();
 
 	Vector3 getEye();
-	Vector3 getCenter();
+	Vector3 getPov();
 	Vector3 getUp();
 	void setEye(Vector3);
-	void setCenter(Vector3);
+	void setPov(Vector3);
 	void setUp(Vector3);
 
 };

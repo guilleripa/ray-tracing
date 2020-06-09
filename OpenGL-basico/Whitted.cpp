@@ -17,7 +17,7 @@ void Whitted::run(Scene scene) {
     float fov = 30; // todo configurable
     float nearDistance = 2; // todo configurable
     Vector3 eye = scene.getCamera().getEye();
-    Vector3 pov = scene.getCamera().getCenter();
+    Vector3 pov = scene.getCamera().getPov();
     Vector3 up = scene.getCamera().getUp().normalize();
     Vector3 direction = (pov - eye).normalize();
 
@@ -76,7 +76,7 @@ vector<Vector3> Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirect
 Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth)
 {
 
-    Vector3 colorAmbience = object->getColor() * scene.getAmbientLight();
+    Vector3 colorAmbience = object->getColor() * object->getAmbienceCoefficient();
     Vector3 colorDiffuse = Vector3(0, 0, 0);
     Vector3 colorSpeculate = Vector3(0, 0, 0);
     Vector3 colorRefraction = Vector3(0, 0, 0);
