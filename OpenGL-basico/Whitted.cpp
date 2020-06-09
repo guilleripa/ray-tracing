@@ -14,11 +14,11 @@ float toDegrees(float radians) {
 
 void Whitted::run(Scene scene) {
 
-    int fov = scene.getCamera().getFov();
-    int nearDistance = scene.getCamera().getNearDistance();
-    Vector3 eye = scene.getCamera().getEye();
-    Vector3 pov = scene.getCamera().getPov();
-    Vector3 up = scene.getCamera().getUp().normalize();
+    int fov = 30;// scene.getCamera().getFov();
+    int nearDistance = scene.getCamera()->getNearDistance();
+    Vector3 eye = scene.getCamera()->getEye();
+    Vector3 pov = scene.getCamera()->getPov();
+    Vector3 up = scene.getCamera()->getUp();
     Vector3 direction = (pov - eye).normalize();
 
     // http://www.lighthouse3d.com/tutorials/view-frustum-culling/view-frustums-shape/
