@@ -6,6 +6,7 @@
 #include "Object.h"
 #include "../Light.h"
 #include "../Camera.h"
+#include "../tinyxml2.h"
 
 using namespace std;
 
@@ -15,7 +16,6 @@ private:
 	int width = 640;
 	int height = 480;
 	int maxDepth = 4;
-	float ambientLight = 0.2;
 	Vector3 backgroundColor = Vector3(0, 0, 0);
 	vector<Object*> objects;
 	vector<Light> lights;
@@ -23,15 +23,18 @@ private:
 
 public:
 	Scene();
+	Scene(int width, int height, int maxDepth, Vector3 backgroundColor);
 
 	int getWidth();
 	int getHeight();
 	int getMaxDepth();
-	float getAmbientLight();
+
 	Vector3 getBackgroundColor();
 	vector<Object*> getObjects();
 	vector<Light> getLights();
 	Camera getCamera();
+
+	Scene loadScene();
 
 	void setWidth(int);
 	void setHeight(int);
