@@ -5,6 +5,7 @@
 
 #include "Vector3.h"
 #include "ImageIO.h"
+#include <iostream>
 
 #define PI 3.14159265
 
@@ -22,13 +23,14 @@ void Whitted::run(Scene scene) {
     Vector3 direction = (pov - eye).normalize();
 
     // http://www.lighthouse3d.com/tutorials/view-frustum-culling/view-frustums-shape/
-    float WidthViewPlane = 2 * tan(toDegrees(fov / 2)) * nearDistance;
+    float WidthViewPlane = 2 * tan(toDegrees(fov/2)) * nearDistance;
     float HeightViewPlane = WidthViewPlane * ((float)scene.getHeight()/ (float)scene.getWidth());
 
     // http://www.lighthouse3d.com/tutorials/view-frustum-culling/geometric-approach-extracting-the-planes/
     Vector3 centerPoint = eye + direction * nearDistance;
-    Vector3 left = up.cross(direction).normalize();
-    Vector3 LeftTopPoint = centerPoint + (up * HeightViewPlane / 2.0) + ( left * WidthViewPlane / 2.0);
+    Vector3 left = up.cross(direction).normalize()*-1;
+    // Vector3 LeftTopPoint = centerPoint + (up * HeightViewPlane / 2.0) + ( left * WidthViewPlane / 2.0);
+    Vector3 RightBottomPoint = centerPoint - (up * HeightViewPlane / 2.0) - ( left * WidthViewPlane / 2.0);
 
     Vector3 rayOrigin = Vector3(eye.getX(), eye.getY(), eye.getZ());
     vector<vector<Vector3>> pixels(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
@@ -41,7 +43,7 @@ void Whitted::run(Scene scene) {
     for (int j = 0; j < scene.getHeight(); ++j) {
         for (int i = 0; i < scene.getWidth(); ++i) {
 
-            Vector3 pixel = LeftTopPoint - (upOffset * j) - (leftOffset * i);
+            Vector3 pixel = RightBottomPoint + (upOffset * j) + (leftOffset * i);
             Vector3 rayDirection = (pixel - rayOrigin).normalize();
 
             vector<Vector3> pixelsVector = trace(scene, rayOrigin, rayDirection, 1);
@@ -99,7 +101,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
             Vector3 pointOfIntersection;
             for (Object* otherObject : scene.getObjects()) {
                 if (otherObject != object) {
-                    
+
                     if (otherObject->intersects(light.getPosition(), rayLightDirection, &distance, &pointOfIntersection) && distance + 0.001 < distanceToLight) {
                         diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() /255);
                         speculateFactor = speculateFactor * otherObject->getSpeculateCoefficient() * (otherObject->getColor() / 255);
@@ -117,24 +119,24 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
 
             Vector3 colorDiffuseLight = Vector3(light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2)));
             colorDiffuse = colorDiffuse + colorDiffuseLight;
-           
+
         }
     }
-    
+
     if (depth < scene.getMaxDepth()) {
-       
+
         if (object->getSpeculateCoefficient() > 0) { // objeto es reflejante
-            
+
             Vector3 rayDirectionReflection = reflect(rayDirection, normal);
             vector<Vector3> colorR = trace(scene, intersection, rayDirectionReflection, depth + 1);
             colorReflection = colorR[0] * object->getSpeculateCoefficient();
-            
+
         }
         if (object->getTransmissionCoefficient() > 0) { // objeto es transparente
             //float n2 = ;
             //float n1 = ;
 
-            //if (asin(n2 / n1)) { // (no ocurre la reflexión interna total)
+            //if (asin(n2 / n1)) { // (no ocurre la reflexiï¿½n interna total)
 
                 Vector3 rayDirectionRefraction = refract(rayDirection, normal, object->getIndexRefraction());
                 vector<Vector3> colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1);
@@ -142,7 +144,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
 
             //}
         }
-       
+
     }
 
     return colorAmbience + colorDiffuse + colorSpeculate + colorRefraction + colorReflection;
