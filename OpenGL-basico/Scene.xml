@@ -1,25 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Scene width="640" height="480" maxDepth="4">
-  <BackgroundColor x="0" y="0" z="0"/>
-  <Camera fov="30" nearDistance="2">
-    <eye x="0" y="0" z="20"/>
-    <pov x="0" y="0" z="0"/>
-    <up x="0" y="1" z="0"/>
-  </Camera>
-  <Lights>
-    <Ligth>
-      <position x="5" y="0" z="6"/>
-      <color x="255" y="255" z="255"/>
-    </Ligth>
-  </Lights>
-  <Objects>
-    <Object type="Sphere" radius="1.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0">
-      <center x="0" y="0" z="0"/>
-      <color x="0" y="100" z="255"/>
-    </Object>
-    <Object type="Sphere" radius="1.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.5">
-      <center x="2" y="0" z="2"/>
-      <color x="10" y="255" z="10"/>
-    </Object>
-  </Objects>
+	<BackgroundColor x="0" y="0" z="0"/>
+	<Camera fov="30" nearDistance="2">
+		<eye x="5" y="5" z="20"/>
+		<pov x="0" y="0" z="0"/>
+		<dir x="0" y="0" z="-1"/>
+		<up x="0" y="1" z="0"/>
+	</Camera>
+	<Lights>
+		<Ligth>
+			<position x="5" y="1" z="5"/>
+			<color R="255" G="255" B="255"/>
+		</Ligth>
+		<Ligth>
+			<position x="0" y="5" z="0"/>
+			<color R="255" G="255" B="255"/>
+		</Ligth>
+	</Lights>
+	<Objects>
+		<Object id="x_axis" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<v0 x="20" y="0" z="0"/>
+			<v1 x="0" y="1" z="0"/>
+			<v2 x="0" y="0" z="0"/>
+			<color R="255" G="10" B="10"/>
+		</Object>
+		<Object id="y_axis" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<v0 x="0" y="20" z="0"/>
+			<v1 x="0" y="0" z="1"/>
+			<v2 x="0" y="0" z="0"/>
+			<color R="10" G="255" B="10"/>
+		</Object>
+		<Object id="z_axis" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<v0 x="0" y="0" z="20"/>
+			<v1 x="1" y="0" z="0"/>
+			<v2 x="0" y="0" z="0"/>
+			<color R="10" G="10" B="255"/>
+		</Object>
+		<!-- <Object type="Sphere" radius="2.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<center x="0" y="0" z="0"/>
+			<color R="0" G="100" B="255"/>
+		</Object>
+		<Object type="Sphere" radius="1.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<center x="3" y="0" z="3"/>
+			<color R="10" G="255" B="10"/>
+		</Object> -->
+		<!-- Tapa de la mesa -->
+		<!-- <Object id="t0" type="Triangle" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<v0 x="-1" y="-2" z="3"/>
+			<v1 x="-1" y="-2" z="-1"/>
+			<v2 x="3" y="-2" z="-1"/>
+			<color R="255" G="10" B="10"/>
+		</Object>
+		<Object id="t1" type="Triangle" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<v0 x="3" y="-2" z="3"/>
+			<v1 x="-1" y="-2" z="3"/>
+			<v2 x="3" y="-2" z="-1"/>
+			<color R="255" G="10" B="10"/>
+		</Object> -->
+		<!-- Cara del frente -->
+		<!-- <Object id="t2" type="Triangle" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<v0 x="-1" y="-5" z="-1"/>
+			<v1 x="-1" y="-2" z="-1"/>
+			<v2 x="3" y="-2" z="-1"/>
+			<color R="255" G="10" B="10"/>
+		</Object>
+		<Object id="t3" type="Triangle" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
+			<v0 x="3" y="-2" z="-1"/>
+			<v1 x="-1" y="-2" z="-1"/>
+			<v2 x="3" y="5" z="-1"/>
+			<color R="255" G="10" B="10"/>
+		</Object> -->
+	</Objects>
 </Scene>
