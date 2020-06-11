@@ -3,7 +3,9 @@
 #include "../Light.h"
 #include "Whitted.h"
 #include "Sphere.h"
+#include "Triangle.h"
 #include <string>
+
 
 Scene::Scene()
 {}
@@ -80,27 +82,27 @@ Scene Scene::loadScene() {
 	if (error != 0) throw 6;
 
 	tinyxml2::XMLElement* sceneNode = doc.FirstChildElement("Scene");
-	int width = atoi(sceneNode->FindAttribute("width")->Value());
-	int height = atoi(sceneNode->FindAttribute("height")->Value());
-	int maxDepth = atoi(sceneNode->FindAttribute("maxDepth")->Value());
+	int width = atof(sceneNode->FindAttribute("width")->Value());
+	int height = atof(sceneNode->FindAttribute("height")->Value());
+	int maxDepth = atof(sceneNode->FindAttribute("maxDepth")->Value());
 	tinyxml2::XMLElement* backgroundColorNode = sceneNode->FirstChildElement("BackgroundColor");
 	Scene scene = Scene(
-		width, height, maxDepth, 
-		Vector3(atoi(backgroundColorNode->FindAttribute("x")->Value()), 
-			atoi(backgroundColorNode->FindAttribute("y")->Value()), 
-			atoi(backgroundColorNode->FindAttribute("z")->Value()))
+		width, height, maxDepth,
+		Vector3(atof(backgroundColorNode->FindAttribute("x")->Value()),
+			atof(backgroundColorNode->FindAttribute("y")->Value()),
+			atof(backgroundColorNode->FindAttribute("z")->Value()))
 	);
 
 	// camara
 	tinyxml2::XMLElement* cameraNode = sceneNode->FirstChildElement("Camera");
-	int fov = atoi(cameraNode->FindAttribute("fov")->Value());
-	int nearDistance = atoi(cameraNode->FindAttribute("nearDistance")->Value());
+	int fov = atof(cameraNode->FindAttribute("fov")->Value());
+	int nearDistance = atof(cameraNode->FindAttribute("nearDistance")->Value());
 	tinyxml2::XMLElement* eyeNode = cameraNode->FirstChildElement("eye");
 	tinyxml2::XMLElement* povNode = cameraNode->FirstChildElement("pov");
 	tinyxml2::XMLElement* upNode = cameraNode->FirstChildElement("up");
-	Vector3 eye = Vector3(atoi(eyeNode->FindAttribute("x")->Value()), atoi(eyeNode->FindAttribute("y")->Value()), atoi(eyeNode->FindAttribute("z")->Value()));
-	Vector3 pov = Vector3(atoi(povNode->FindAttribute("x")->Value()), atoi(povNode->FindAttribute("y")->Value()), atoi(povNode->FindAttribute("z")->Value()));
-	Vector3 up = Vector3(atoi(upNode->FindAttribute("x")->Value()), atoi(upNode->FindAttribute("y")->Value()), atoi(upNode->FindAttribute("z")->Value()));
+	Vector3 eye = Vector3(atof(eyeNode->FindAttribute("x")->Value()), atof(eyeNode->FindAttribute("y")->Value()), atof(eyeNode->FindAttribute("z")->Value()));
+	Vector3 pov = Vector3(atof(povNode->FindAttribute("x")->Value()), atof(povNode->FindAttribute("y")->Value()), atof(povNode->FindAttribute("z")->Value()));
+	Vector3 up = Vector3(atof(upNode->FindAttribute("x")->Value()), atof(upNode->FindAttribute("y")->Value()), atof(upNode->FindAttribute("z")->Value()));
 	scene.setCamera(new Camera(fov, nearDistance, eye, pov, up));
 
 	//luces
@@ -109,8 +111,8 @@ Scene Scene::loadScene() {
 	for (tinyxml2::XMLElement* lightNode = lightsNode->FirstChildElement("Ligth"); lightNode != 0; lightNode = lightNode->NextSiblingElement()) {
 		tinyxml2::XMLElement* positionNode = lightNode->FirstChildElement("position");
 		tinyxml2::XMLElement* colorNode = lightNode->FirstChildElement("color");
-		Vector3 position = Vector3(atoi(positionNode->FindAttribute("x")->Value()), atoi(positionNode->FindAttribute("y")->Value()), atoi(positionNode->FindAttribute("z")->Value()));
-		Vector3 color = Vector3(atoi(colorNode->FindAttribute("x")->Value()), atoi(colorNode->FindAttribute("y")->Value()), atoi(colorNode->FindAttribute("z")->Value()));
+		Vector3 position = Vector3(atof(positionNode->FindAttribute("x")->Value()), atof(positionNode->FindAttribute("y")->Value()), atof(positionNode->FindAttribute("z")->Value()));
+		Vector3 color = Vector3(atof(colorNode->FindAttribute("R")->Value()), atof(colorNode->FindAttribute("G")->Value()), atof(colorNode->FindAttribute("B")->Value()));
 		lights.push_back(Light(position, color));
 	}
 	scene.setLights(lights);
@@ -119,20 +121,41 @@ Scene Scene::loadScene() {
 	vector<Object*> objects;
 	tinyxml2::XMLElement* objectsNode = sceneNode->FirstChildElement("Objects");
 	for (tinyxml2::XMLElement* objectNode = objectsNode->FirstChildElement("Object"); objectNode != 0; objectNode = objectNode->NextSiblingElement()) {
+		float ambienceCoefficient = atof(objectNode->FindAttribute("ambienceCoefficient")->Value());
+		float transmissionCoefficient = atof(objectNode->FindAttribute("transmissionCoefficient")->Value());
+		float speculateCoefficient = atof(objectNode->FindAttribute("speculateCoefficient")->Value());
+		float diffuseCoefficient = atof(objectNode->FindAttribute("diffuseCoefficient")->Value());
+		float indexRefraction = atof(objectNode->FindAttribute("indexRefraction")->Value());
+
+		tinyxml2::XMLElement* colorNode = objectNode->FirstChildElement("color");
+		Vector3 color = Vector3(atof(colorNode->FindAttribute("R")->Value()), atof(colorNode->FindAttribute("G")->Value()), atof(colorNode->FindAttribute("B")->Value()));
+
 		string type = objectNode->FindAttribute("type")->Value();
 		if (type == "Sphere") {
 			float radius = atof(objectNode->FindAttribute("radius")->Value());
-			float ambienceCoefficient = atof(objectNode->FindAttribute("ambienceCoefficient")->Value());
-			float transmissionCoefficient = atof(objectNode->FindAttribute("transmissionCoefficient")->Value());
-			float speculateCoefficient = atof(objectNode->FindAttribute("speculateCoefficient")->Value());
-			float diffuseCoefficient = atof(objectNode->FindAttribute("diffuseCoefficient")->Value());
-			float indexRefraction = atof(objectNode->FindAttribute("indexRefraction")->Value());
 
 			tinyxml2::XMLElement* centerNode = objectNode->FirstChildElement("center");
-			tinyxml2::XMLElement* colorNode = objectNode->FirstChildElement("color");
-			Vector3 center = Vector3(atoi(centerNode->FindAttribute("x")->Value()), atoi(centerNode->FindAttribute("y")->Value()), atoi(centerNode->FindAttribute("z")->Value()));
-			Vector3 color = Vector3(atoi(colorNode->FindAttribute("x")->Value()), atoi(colorNode->FindAttribute("y")->Value()), atoi(colorNode->FindAttribute("z")->Value()));
+			Vector3 center = Vector3(atof(centerNode->FindAttribute("x")->Value()), atof(centerNode->FindAttribute("y")->Value()), atof(centerNode->FindAttribute("z")->Value()));
 			objects.push_back(new Sphere(center, radius, ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
+		}
+		else if (type == "Triangle") {
+			vector<tinyxml2::XMLElement *> tiny_vertices;
+			tiny_vertices.push_back(objectNode->FirstChildElement("v0"));
+			tiny_vertices.push_back(objectNode->FirstChildElement("v1"));
+			tiny_vertices.push_back(objectNode->FirstChildElement("v2"));
+
+			vector<Vector3> vertices;
+			for (tinyxml2::XMLElement *vertex : tiny_vertices)
+			{
+				vertices.push_back(
+					Vector3(
+						atof(vertex->FindAttribute("x")->Value()),
+						atof(vertex->FindAttribute("y")->Value()),
+						atof(vertex->FindAttribute("z")->Value())));
+			}
+			objects.push_back(new Triangle(
+				vertices[0], vertices[1], vertices[2],
+				ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
 		}
 	}
 	scene.setObjects(objects);

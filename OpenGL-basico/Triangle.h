@@ -8,7 +8,7 @@
 class Triangle : public Object
 {
 private:
-	// for getNormalIn to work we need to define them clockwise looking from the origin (0,0,0)
+	// for getNormalIn to work we need to define them counter-clockwise.
 	Vector3 v0, v1, v2;
 public:
 	Triangle();
