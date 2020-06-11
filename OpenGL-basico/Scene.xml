@@ -2,27 +2,23 @@
 <Scene width="640" height="480" maxDepth="4">
   <BackgroundColor x="0" y="0" z="0"/>
   <Camera fov="30" nearDistance="2">
-    <eye x="0" y="-5" z="20"/>
+    <eye x="0" y="0" z="20"/>
     <pov x="0" y="0" z="0"/>
     <up x="0" y="1" z="0"/>
   </Camera>
   <Lights>
     <Ligth>
-      <position x="5" y="1" z="5"/>
-      <color x="255" y="255" z="255"/>
-    </Ligth>
-    <Ligth>
-      <position x="0" y="5" z="0"/>
+      <position x="5" y="0" z="6"/>
       <color x="255" y="255" z="255"/>
     </Ligth>
   </Lights>
   <Objects>
-    <Object type="Sphere" radius="2.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
+    <Object type="Sphere" radius="1.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0">
       <center x="0" y="0" z="0"/>
       <color x="0" y="100" z="255"/>
     </Object>
-    <Object type="Sphere" radius="1.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.1">
-      <center x="3" y="0" z="3"/>
+    <Object type="Sphere" radius="1.0" ambienceCoefficient="0.1" transmissionCoefficient="0.1" speculateCoefficient="0.8" diffuseCoefficient="0.1" indexRefraction="0.5">
+      <center x="2" y="0" z="2"/>
       <color x="10" y="255" z="10"/>
     </Object>
   </Objects>

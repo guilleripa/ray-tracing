@@ -29,6 +29,7 @@ void Whitted::run(Scene scene) {
     Vector3 centerPoint = eye + direction * nearDistance;
     Vector3 left = up.cross(direction).normalize();
     Vector3 LeftTopPoint = centerPoint + (up * HeightViewPlane / 2.0) + ( left * WidthViewPlane / 2.0);
+    
 
     Vector3 rayOrigin = Vector3(eye.getX(), eye.getY(), eye.getZ());
     vector<vector<Vector3>> pixels(scene.getHeight(), vector<Vector3>(scene.getWidth(), Vector3()));
@@ -37,14 +38,16 @@ void Whitted::run(Scene scene) {
 
     Vector3 leftOffset = left * (WidthViewPlane / (scene.getWidth() - 1));
     Vector3 upOffset = up * (HeightViewPlane / (scene.getHeight() - 1));
+    std::stack<Object*> intersectedObjectsStack;
 
     for (int j = 0; j < scene.getHeight(); ++j) {
         for (int i = 0; i < scene.getWidth(); ++i) {
 
             Vector3 pixel = LeftTopPoint - (upOffset * j) - (leftOffset * i);
             Vector3 rayDirection = (pixel - rayOrigin).normalize();
-
-            vector<Vector3> pixelsVector = trace(scene, rayOrigin, rayDirection, 1);
+            // cout << " y: " << rayDirection.getY() << "\n";
+            vector<Vector3> pixelsVector = trace(scene, rayOrigin, rayDirection, 1, intersectedObjectsStack);
+            
             pixels[j][i] = pixelsVector[0];
             pixelsReflection[j][i] = pixelsVector[1];
             pixelsTransmision[j][i] = pixelsVector[2];
@@ -54,14 +57,14 @@ void Whitted::run(Scene scene) {
     ImageIO().saveAsPng(scene, pixels, pixelsReflection, pixelsTransmision);
 }
 
-vector<Vector3> Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int depth )
+vector<Vector3> Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, int depth, std::stack<Object*> intersectedObjectsStack)
 {
     vector<Vector3> result(3, Vector3());
     Vector3 pointOfIntersection;
     Object* object = intersection(scene, rayOrigin, rayDirection, &pointOfIntersection);
     if (object != NULL) {
         Vector3 normal = object->getNormalIn(pointOfIntersection);
-        result[0] = shadow(scene, object, rayOrigin, rayDirection, pointOfIntersection, normal, depth);
+        result[0] = shadow(scene, object, rayOrigin, rayDirection, pointOfIntersection, normal, depth, intersectedObjectsStack);
         result[1] = Vector3(object->getSpeculateCoefficient() * 255, object->getSpeculateCoefficient() * 255, object->getSpeculateCoefficient() * 255);
         result[2] = Vector3(object->getTransmissionCoefficient() * 255, object->getTransmissionCoefficient() * 255, object->getTransmissionCoefficient() * 255);
     }
@@ -73,7 +76,7 @@ vector<Vector3> Whitted::trace(Scene scene, Vector3 rayOrigin, Vector3 rayDirect
     return result;
 }
 
-Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth)
+Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth, std::stack<Object*> intersectedObjectsStack)
 {
 
     Vector3 colorAmbience = object->getColor() * object->getAmbienceCoefficient();
@@ -101,7 +104,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
                 if (otherObject != object) {
                     
                     if (otherObject->intersects(light.getPosition(), rayLightDirection, &distance, &pointOfIntersection) && distance + 0.001 < distanceToLight) {
-                        diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() /255);
+                        diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() / 255); // todo investigar
                         speculateFactor = speculateFactor * otherObject->getSpeculateCoefficient() * (otherObject->getColor() / 255);
                     }
                 }
@@ -126,21 +129,38 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
         if (object->getSpeculateCoefficient() > 0) { // objeto es reflejante
             
             Vector3 rayDirectionReflection = reflect(rayDirection, normal);
-            vector<Vector3> colorR = trace(scene, intersection, rayDirectionReflection, depth + 1);
+            vector<Vector3> colorR = trace(scene, intersection, rayDirectionReflection, depth + 1, intersectedObjectsStack);
             colorReflection = colorR[0] * object->getSpeculateCoefficient();
             
         }
         if (object->getTransmissionCoefficient() > 0) { // objeto es transparente
-            //float n2 = ;
-            //float n1 = ;
+            
 
-            //if (asin(n2 / n1)) { // (no ocurre la reflexión interna total)
+            // Para saber el angulo de insidencia tenemos que saber desde que objeto viene el rayo
+            // y cual es el indice de refraccion de ese objeto, para eso usamos una pila de objetos que saben su indice
+            // a medida que intersectamos objetos los vamos agregando
 
+            float n1;
+            float n2;
+
+            if (intersectedObjectsStack.empty()) {
+                n1 = 1;
+            }
+            else {
+                n1 = intersectedObjectsStack.top()->getIndexRefraction(); 
+            }
+
+            n2 = object->getIndexRefraction();
+
+            intersectedObjectsStack.push(object);
+
+            float incidenceAngle = rayDirection.angle(normal);
+
+            if (incidenceAngle <= asin(n2 / n1)) { // no ocurre la reflexión interna total
                 Vector3 rayDirectionRefraction = refract(rayDirection, normal, object->getIndexRefraction());
-                vector<Vector3> colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1);
+                vector<Vector3> colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1, intersectedObjectsStack);
                 colorRefraction = colorT[0] * object->getTransmissionCoefficient();
-
-            //}
+            }
         }
        
     }

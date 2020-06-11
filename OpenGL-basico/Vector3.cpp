@@ -84,3 +84,8 @@ Vector3 Vector3::cross(Vector3 v)
         this->getZ() * v.getX() - this->getX() * v.getZ(),
         this->getX() * v.getY() - this->getY() * v.getX());
 }
+
+
+float Vector3::angle(Vector3 v) {
+    return acos(this->dot(v) / (this->mod() * v.mod()));
+}
