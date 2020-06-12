@@ -148,7 +148,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
                 n1 = 1;
             }
             else {
-                n1 = intersectedObjectsStack.top()->getIndexRefraction(); 
+                n1 = intersectedObjectsStack.top()->getIndexRefraction();
             }
 
             n2 = object->getIndexRefraction();
@@ -157,11 +157,12 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
 
             float incidenceAngle = rayDirection.angle(normal);
 
-            if (incidenceAngle <= asin(n2 / n1)) { // no ocurre la reflexión interna total
+            //if (incidenceAngle <= asin(n2 / n1)) { // no ocurre la reflexión interna total
+            // todo no fucniona capaz es por gradiantes vs grades
                 Vector3 rayDirectionRefraction = refract(rayDirection, normal, object->getIndexRefraction());
                 vector<Vector3> colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1, intersectedObjectsStack);
                 colorRefraction = colorT[0] * object->getTransmissionCoefficient();
-            }
+            //}
         }
 
     }
