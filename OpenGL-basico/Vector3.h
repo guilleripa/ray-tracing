@@ -26,6 +26,7 @@ public:
     Vector3 operator-(Vector3 v);
     Vector3 operator+(Vector3 v);
     Vector3 cross(Vector3 v);
+    float angle(Vector3 v);
 };
 
 #endif // VECTOR_H
