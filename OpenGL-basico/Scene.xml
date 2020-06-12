@@ -4,7 +4,6 @@
 	<Camera fov="30" nearDistance="2">
 		<eye x="8.5" y="10" z="65"/>
 		<pov x="8.5" y="10" z="0"/>
-		<dir x="0" y="0" z="-1"/>
 		<up x="0" y="1" z="0"/>
 	</Camera>
 	<Lights>
@@ -24,7 +23,7 @@
 			<v2 x="0" y="0" z="0"/>
 			<color R="250" G="250" B="250" />
 		</Object>
-    <Object id="paredFondo2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+    	<Object id="paredFondo2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
 			<v0 x="17" y="20" z="0"/>
 			<v1 x="0" y="20" z="0"/>
 			<v2 x="0" y="0" z="0"/>
@@ -36,46 +35,46 @@
 			<v2 x="-17" y="20" z="20"/>
 			<color R="10" G="255" B="10"/>
 		</Object>
-    <Object id="paredDerecha2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-      <v0 x="-17" y="20" z="20"/>
+    	<Object id="paredDerecha2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+      		<v0 x="-17" y="20" z="20"/>
 			<v1 x="-17" y="20" z="0"/>
 			<v2 x="-17" y="0" z="0"/>
 			<color R="10" G="255" B="10"/>
 		</Object>
-    <Object id="paredIzquierda1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+    	<Object id="paredIzquierda1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
 			<v0 x="0" y="0" z="0"/>
 			<v1 x="0" y="20" z="20"/>
 			<v2 x="0" y="0" z="20"/>
 			<color R="255" G="10" B="10"/>
 		</Object>
-    <Object id="paredIzquierda2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-      <v0 x="0" y="0" z="0"/>
+    	<Object id="paredIzquierda2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+      		<v0 x="0" y="0" z="0"/>
 			<v1 x="0" y="20" z="0"/>
 			<v2 x="0" y="20" z="20"/>
 			<color R="255" G="10" B="10"/>
 		</Object>
-    <Object id="piso1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+    	<Object id="piso1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
 			<v0 x="0" y="0" z="0"/>
 			<v1 x="0" y="0" z="20"/>
 			<v2 x="17" y="0" z="0"/>
 			<color R="255" G="255" B="255"/>
 		</Object>
-    <Object id="piso2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-      <v0 x="0" y="0" z="20"/>
+    	<Object id="piso2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
+      		<v0 x="0" y="0" z="20"/>
 			<v1 x="17" y="0" z="20"/>
 			<v2 x="17" y="0" z="0"/>
 			<color R="255" G="255" B="255"/>
 		</Object>
-    <Object id="techo1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0" diffuseCoefficient="1" indexRefraction="0.1">
+    	<Object id="techo1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0" diffuseCoefficient="1" indexRefraction="0.1">
 			<v0 x="17" y="-20" z="0"/>
 			<v1 x="0" y="-20" z="20"/>
-      <v2 x="0" y="-20" z="0"/>
+      		<v2 x="0" y="-20" z="0"/>
 			<color R="255" G="255" B="255"/>
 		</Object>
-    <Object id="techo2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0" diffuseCoefficient="1" indexRefraction="0.1">
-      <v0 x="17" y="-20" z="0"/>
-      <v1 x="17" y="-20" z="20"/>
-      <v2 x="0" y="-20" z="20"/>
+    	<Object id="techo2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0" diffuseCoefficient="1" indexRefraction="0.1">
+      		<v0 x="17" y="-20" z="0"/>
+      		<v1 x="17" y="-20" z="20"/>
+      		<v2 x="0" y="-20" z="20"/>
 			<color R="255" G="255" B="255"/>
 		</Object>
 
@@ -87,7 +86,11 @@
 			<center x="11.5" y="7" z="5"/>
 			<color R="255" G="255" B="250"/>
 		</Object>
-
+		<Object type="Cylinder" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="0" speculateCoefficient="0.2" diffuseCoefficient="0" indexRefraction="0">
+			<baseCenter1 x="3" y="4" z="5"/>
+			<baseCenter2 x="3" y="8" z="5"/>
+			<color R="0" G="100" B="255"/>
+		</Object>
     <!-- MESA -->
 		<Object id="tapaMesa1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.5" indexRefraction="0">
 			<v0 x="3" y="-6" z="2"/>

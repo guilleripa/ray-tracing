@@ -4,6 +4,7 @@
 #include "Whitted.h"
 #include "Sphere.h"
 #include "Triangle.h"
+#include "Cylinder.h"
 #include <string>
 
 
@@ -156,6 +157,15 @@ Scene Scene::loadScene() {
 			objects.push_back(new Triangle(
 				vertices[0], vertices[1], vertices[2],
 				ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
+		}
+		else if (type == "Cylinder") {
+			float radius = atof(objectNode->FindAttribute("radius")->Value());
+			tinyxml2::XMLElement* baseCenterTiny1 = objectNode->FirstChildElement("baseCenter1");
+			Vector3 baseCenter1 = Vector3(atof(baseCenterTiny1->FindAttribute("x")->Value()), atof(baseCenterTiny1->FindAttribute("y")->Value()), atof(baseCenterTiny1->FindAttribute("z")->Value()));
+			tinyxml2::XMLElement* baseCenterTiny2 = objectNode->FirstChildElement("baseCenter2");
+			Vector3 baseCenter2 = Vector3(atof(baseCenterTiny2->FindAttribute("x")->Value()), atof(baseCenterTiny2->FindAttribute("y")->Value()), atof(baseCenterTiny2->FindAttribute("z")->Value()));
+			objects.push_back(new Cylinder(baseCenter1, baseCenter2, radius, ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
+
 		}
 	}
 	scene.setObjects(objects);
