@@ -13,7 +13,7 @@
 			<color R="255" G="255" B="255"/>
 		</Ligth>
 		<Ligth>
-			<position x="8.5" y="19.99" z="6"/>
+			<position x="8.5" y="7" z="20"/>
 			<color R="255" G="255" B="255"/>
 		</Ligth>
 	</Lights>
@@ -79,7 +79,7 @@
 			<color R="255" G="255" B="255"/>
 		</Object>
 
-    <Object type="Sphere" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="1" speculateCoefficient="0" diffuseCoefficient="0" indexRefraction="2">
+    <Object type="Sphere" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="0.9" speculateCoefficient="0" diffuseCoefficient="0" indexRefraction="2">
 			<center x="6.5" y="8" z="5"/>
 			<color R="255" G="248" B="246"/>
 		</Object>
