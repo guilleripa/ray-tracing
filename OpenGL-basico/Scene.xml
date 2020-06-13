@@ -78,7 +78,7 @@
 			<color R="255" G="255" B="255"/>
 		</Object>
 
-    <Object type="Sphere" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="0.9" speculateCoefficient="0" diffuseCoefficient="0" indexRefraction="2">
+    	<Object type="Sphere" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="0.9" speculateCoefficient="0.1" diffuseCoefficient="0" indexRefraction="1.5">
 			<center x="6.5" y="8" z="5"/>
 			<color R="255" G="248" B="246"/>
 		</Object>
@@ -86,9 +86,9 @@
 			<center x="11.5" y="7" z="5"/>
 			<color R="255" G="255" B="250"/>
 		</Object>
-		<Object type="Cylinder" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="0" speculateCoefficient="0.2" diffuseCoefficient="0" indexRefraction="0">
-			<baseCenter1 x="3" y="4" z="5"/>
-			<baseCenter2 x="3" y="8" z="5"/>
+		<Object type="Cylinder" radius="1.0" ambienceCoefficient="0" transmissionCoefficient="0.1" speculateCoefficient="0.1" diffuseCoefficient="1" indexRefraction="0.1">
+			<baseCenter1 x="8" y="6" z="5"/>
+			<baseCenter2 x="8" y="10" z="5"/>
 			<color R="0" G="100" B="255"/>
 		</Object>
     <!-- MESA -->
