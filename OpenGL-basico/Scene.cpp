@@ -5,6 +5,7 @@
 #include "Sphere.h"
 #include "Triangle.h"
 #include "Cylinder.h"
+#include "Plane.h"
 #include <string>
 
 
@@ -12,11 +13,12 @@ Scene::Scene()
 {}
 
 
-Scene::Scene(int width, int height, int maxDepth, Vector3 backgroundColor){
+Scene::Scene(int width, int height, int maxDepth, bool parallel, Vector3 backgroundColor){
 	this->width = width;
 	this->height = height;
 	this->maxDepth = maxDepth;
 	this->backgroundColor = backgroundColor;
+	this->parallel = parallel;
 }
 
 int Scene::getWidth() {
@@ -45,6 +47,10 @@ vector<Light> Scene::getLights() {
 
 Camera* Scene::getCamera() {
 	return camera;
+}
+
+bool Scene::getParallelism() {
+	return parallel;
 }
 
 void Scene::setWidth(int width) {
@@ -83,12 +89,13 @@ Scene Scene::loadScene() {
 	if (error != 0) throw 6;
 
 	tinyxml2::XMLElement* sceneNode = doc.FirstChildElement("Scene");
-	int width = atof(sceneNode->FindAttribute("width")->Value());
-	int height = atof(sceneNode->FindAttribute("height")->Value());
-	int maxDepth = atof(sceneNode->FindAttribute("maxDepth")->Value());
+	int width = atoi(sceneNode->FindAttribute("width")->Value());
+	int height = atoi(sceneNode->FindAttribute("height")->Value());
+	int maxDepth = atoi(sceneNode->FindAttribute("maxDepth")->Value());
+	string parallel = sceneNode->FindAttribute("parallel")->Value();
 	tinyxml2::XMLElement* backgroundColorNode = sceneNode->FirstChildElement("BackgroundColor");
 	Scene scene = Scene(
-		width, height, maxDepth,
+		width, height, maxDepth, parallel == "true",
 		Vector3(atof(backgroundColorNode->FindAttribute("x")->Value()),
 			atof(backgroundColorNode->FindAttribute("y")->Value()),
 			atof(backgroundColorNode->FindAttribute("z")->Value()))
