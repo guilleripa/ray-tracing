@@ -50,7 +50,7 @@ bool Triangle::pointInTriangle(Vector3 pointOfIntersection) {
 bool Triangle::intersects(Vector3 rayOrigin, Vector3 rayDirection, float* distance, Vector3* pointOfIntersection) {
 	Vector3 normal = getNormalIn(v1);
 
-	// The Ray And The Triangle Are Parallel
+	// The Ray and the Triangle are parallel
 	float dirProyection = normal.dot(rayDirection);
 	if (abs(dirProyection) < ZERO) {
 		return false;

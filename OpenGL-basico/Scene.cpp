@@ -167,6 +167,13 @@ Scene Scene::loadScene() {
 			objects.push_back(new Cylinder(baseCenter1, baseCenter2, radius, ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
 
 		}
+		else if (type == "Plane") {
+			tinyxml2::XMLElement* tinyPlanePoint = objectNode->FirstChildElement("planePoint");
+			Vector3 planePoint = Vector3(atof(tinyPlanePoint->FindAttribute("x")->Value()), atof(tinyPlanePoint->FindAttribute("y")->Value()), atof(tinyPlanePoint->FindAttribute("z")->Value()));
+			tinyxml2::XMLElement* tinyNormal = objectNode->FirstChildElement("normal");
+			Vector3 normal = Vector3(atof(tinyNormal->FindAttribute("x")->Value()), atof(tinyNormal->FindAttribute("y")->Value()), atof(tinyNormal->FindAttribute("z")->Value()));
+			objects.push_back(new Plane(planePoint, normal, ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
+		}
 	}
 	scene.setObjects(objects);
 

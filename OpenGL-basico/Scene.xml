@@ -17,64 +17,29 @@
 		</Ligth>
 	</Lights>
 	<Objects>
-		<Object id="paredFondo1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-			<v0 x="17" y="0" z="0"/>
-			<v1 x="17" y="20" z="0"/>
-			<v2 x="0" y="0" z="0"/>
+		<Object id="paredFondo" type="Plane" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0">
+			<planePoint x="0" y="0" z="0"/>
+			<normal x="0" y="0" z="-1" />
 			<color R="250" G="250" B="250" />
 		</Object>
-    	<Object id="paredFondo2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-			<v0 x="17" y="20" z="0"/>
-			<v1 x="0" y="20" z="0"/>
-			<v2 x="0" y="0" z="0"/>
-			<color R="250" G="250" B="250" />
-		</Object>
-		<Object id="paredDerecha1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-			<v0 x="-17" y="0" z="0"/>
-			<v1 x="-17" y="0" z="20"/>
-			<v2 x="-17" y="20" z="20"/>
+		<Object id="paredDerecha" type="Plane" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0">
+			<planePoint x="-17" y="0" z="0"/>
+			<normal x="1" y="0" z="0" />
 			<color R="10" G="255" B="10"/>
 		</Object>
-    	<Object id="paredDerecha2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-      		<v0 x="-17" y="20" z="20"/>
-			<v1 x="-17" y="20" z="0"/>
-			<v2 x="-17" y="0" z="0"/>
-			<color R="10" G="255" B="10"/>
-		</Object>
-    	<Object id="paredIzquierda1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-			<v0 x="0" y="0" z="0"/>
-			<v1 x="0" y="20" z="20"/>
-			<v2 x="0" y="0" z="20"/>
+		<Object id="paredIzquierda" type="Plane" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0">
+			<planePoint x="0" y="0" z="0"/>
+			<normal x="-1" y="0" z="0" />
 			<color R="255" G="10" B="10"/>
 		</Object>
-    	<Object id="paredIzquierda2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-      		<v0 x="0" y="0" z="0"/>
-			<v1 x="0" y="20" z="0"/>
-			<v2 x="0" y="20" z="20"/>
-			<color R="255" G="10" B="10"/>
-		</Object>
-    	<Object id="piso1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-			<v0 x="0" y="0" z="0"/>
-			<v1 x="0" y="0" z="20"/>
-			<v2 x="17" y="0" z="0"/>
+		<Object id="piso" type="Plane" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0">
+			<planePoint x="0" y="0" z="0"/>
+			<normal x="0" y="-1" z="0" />
 			<color R="255" G="255" B="255"/>
 		</Object>
-    	<Object id="piso2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0.8" speculateCoefficient="0.1" diffuseCoefficient="0.1" indexRefraction="0.1">
-      		<v0 x="0" y="0" z="20"/>
-			<v1 x="17" y="0" z="20"/>
-			<v2 x="17" y="0" z="0"/>
-			<color R="255" G="255" B="255"/>
-		</Object>
-    	<Object id="techo1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0" diffuseCoefficient="1" indexRefraction="0.1">
-			<v0 x="17" y="-20" z="0"/>
-			<v1 x="0" y="-20" z="20"/>
-      		<v2 x="0" y="-20" z="0"/>
-			<color R="255" G="255" B="255"/>
-		</Object>
-    	<Object id="techo2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0" diffuseCoefficient="1" indexRefraction="0.1">
-      		<v0 x="17" y="-20" z="0"/>
-      		<v1 x="17" y="-20" z="20"/>
-      		<v2 x="0" y="-20" z="20"/>
+		<Object id="techo" type="Plane" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0" diffuseCoefficient="1" indexRefraction="0">
+			<planePoint x="0" y="-20" z="0"/>
+			<normal x="0" y="1" z="0" />
 			<color R="255" G="255" B="255"/>
 		</Object>
 
