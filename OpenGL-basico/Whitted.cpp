@@ -2,7 +2,7 @@
 #include <vector>
 #include <limits>
 #include <cmath>
-
+#include <omp.h>
 #include "Vector3.h"
 #include "ImageIO.h"
 #include <iostream>
@@ -41,14 +41,16 @@ void Whitted::run(Scene scene) {
     Vector3 upOffset = up * (HeightViewPlane / (scene.getHeight() - 1));
     std::stack<Object*> intersectedObjectsStack;
 
+    #pragma omp parallel for if(scene.getParallelism())
     for (int j = 0; j < scene.getHeight(); ++j) {
+        #pragma omp parallel for if(scene.getParallelism())
         for (int i = 0; i < scene.getWidth(); ++i) {
 
             Vector3 pixel = RightBottomPoint + (upOffset * j) + (leftOffset * i);
             Vector3 rayDirection = (pixel - rayOrigin).normalize();
             // cout << " y: " << rayDirection.getY() << "\n";
             vector<Vector3> pixelsVector = trace(scene, rayOrigin, rayDirection, 1, intersectedObjectsStack);
-            
+
             pixels[j][i] = pixelsVector[0];
             pixelsReflection[j][i] = pixelsVector[1];
             pixelsTransmision[j][i] = pixelsVector[2];
@@ -92,7 +94,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
 
             float distanceToLight = (light.getPosition() - intersection).mod();
 
-            
+
             Vector3 speculateFactor = Vector3(object->getSpeculateCoefficient(), object->getSpeculateCoefficient(), object->getSpeculateCoefficient());
             Vector3 diffuseFactor = Vector3(object->getDiffuseCoefficient(), object->getDiffuseCoefficient(), object->getDiffuseCoefficient());
 
@@ -110,7 +112,7 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
 
             colorDiffuse = colorDiffuse + light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2));
             colorSpeculate = colorSpeculate + speculateColor(rayLightDirection, rayDirection, normal, light.getColor(), speculateFactor);
-            
+
 
         }
     }
@@ -150,7 +152,7 @@ Vector3 Whitted::reflectColor(Scene scene, Object* object, Vector3 rayDirection,
 }
 
 Vector3 Whitted::refractColor(Scene scene, Object* object, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth, std::stack<Object*> intersectedObjectsStack) {
-    // Para saber el angulo de insidencia tenemos que saber desde que objeto viene el rayo
+    // Para saber el angulo de incidencia tenemos que saber desde que objeto viene el rayo
     // y cual es el indice de refraccion de ese objeto, para eso usamos una pila de objetos que saben su indice
     // a medida que intersectamos objetos los vamos agregando
 
@@ -185,6 +187,7 @@ Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirecti
     float distance = std::numeric_limits<float>::infinity();
     Object* nearestObject = NULL;
     Vector3 pointOfIntersection;
+    // TODO: paralelizar
     for (Object* object : scene.getObjects()) {
         if (object->intersects(rayOrigin, rayDirection, &distance, &pointOfIntersection) && distance < distanceMin) {
             nearestObject = object;

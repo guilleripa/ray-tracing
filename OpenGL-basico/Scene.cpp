@@ -5,6 +5,7 @@
 #include "Sphere.h"
 #include "Triangle.h"
 #include "Cylinder.h"
+#include "Plane.h"
 #include <string>
 
 
@@ -12,11 +13,12 @@ Scene::Scene()
 {}
 
 
-Scene::Scene(int width, int height, int maxDepth, Vector3 backgroundColor){
+Scene::Scene(int width, int height, int maxDepth, bool parallel, Vector3 backgroundColor){
 	this->width = width;
 	this->height = height;
 	this->maxDepth = maxDepth;
 	this->backgroundColor = backgroundColor;
+	this->parallel = parallel;
 }
 
 int Scene::getWidth() {
@@ -45,6 +47,10 @@ vector<Light> Scene::getLights() {
 
 Camera* Scene::getCamera() {
 	return camera;
+}
+
+bool Scene::getParallelism() {
+	return parallel;
 }
 
 void Scene::setWidth(int width) {
@@ -83,12 +89,13 @@ Scene Scene::loadScene() {
 	if (error != 0) throw 6;
 
 	tinyxml2::XMLElement* sceneNode = doc.FirstChildElement("Scene");
-	int width = atof(sceneNode->FindAttribute("width")->Value());
-	int height = atof(sceneNode->FindAttribute("height")->Value());
-	int maxDepth = atof(sceneNode->FindAttribute("maxDepth")->Value());
+	int width = atoi(sceneNode->FindAttribute("width")->Value());
+	int height = atoi(sceneNode->FindAttribute("height")->Value());
+	int maxDepth = atoi(sceneNode->FindAttribute("maxDepth")->Value());
+	string parallel = sceneNode->FindAttribute("parallel")->Value();
 	tinyxml2::XMLElement* backgroundColorNode = sceneNode->FirstChildElement("BackgroundColor");
 	Scene scene = Scene(
-		width, height, maxDepth,
+		width, height, maxDepth, parallel == "true",
 		Vector3(atof(backgroundColorNode->FindAttribute("x")->Value()),
 			atof(backgroundColorNode->FindAttribute("y")->Value()),
 			atof(backgroundColorNode->FindAttribute("z")->Value()))
@@ -166,6 +173,13 @@ Scene Scene::loadScene() {
 			Vector3 baseCenter2 = Vector3(atof(baseCenterTiny2->FindAttribute("x")->Value()), atof(baseCenterTiny2->FindAttribute("y")->Value()), atof(baseCenterTiny2->FindAttribute("z")->Value()));
 			objects.push_back(new Cylinder(baseCenter1, baseCenter2, radius, ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
 
+		}
+		else if (type == "Plane") {
+			tinyxml2::XMLElement* tinyPlanePoint = objectNode->FirstChildElement("planePoint");
+			Vector3 planePoint = Vector3(atof(tinyPlanePoint->FindAttribute("x")->Value()), atof(tinyPlanePoint->FindAttribute("y")->Value()), atof(tinyPlanePoint->FindAttribute("z")->Value()));
+			tinyxml2::XMLElement* tinyNormal = objectNode->FirstChildElement("normal");
+			Vector3 normal = Vector3(atof(tinyNormal->FindAttribute("x")->Value()), atof(tinyNormal->FindAttribute("y")->Value()), atof(tinyNormal->FindAttribute("z")->Value()));
+			objects.push_back(new Plane(planePoint, normal, ambienceCoefficient, transmissionCoefficient, speculateCoefficient, diffuseCoefficient, indexRefraction, color));
 		}
 	}
 	scene.setObjects(objects);

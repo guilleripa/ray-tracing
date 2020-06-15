@@ -20,10 +20,11 @@ private:
 	vector<Object*> objects;
 	vector<Light> lights;
 	Camera* camera;
+	bool parallel;
 
 public:
 	Scene();
-	Scene(int width, int height, int maxDepth, Vector3 backgroundColor);
+	Scene(int width, int height, int maxDepth, bool parallel, Vector3 backgroundColor);
 
 	int getWidth();
 	int getHeight();
@@ -33,6 +34,7 @@ public:
 	vector<Object*> getObjects();
 	vector<Light> getLights();
 	Camera* getCamera();
+	bool getParallelism();
 
 	Scene loadScene();
 
