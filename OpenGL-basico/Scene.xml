@@ -78,7 +78,7 @@
 			<color R="255" G="255" B="255"/>
 		</Object>
 
-    	<Object type="Sphere" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="0.9" speculateCoefficient="0.1" diffuseCoefficient="0" indexRefraction="1.5">
+    	<Object type="Sphere" radius="2.0" ambienceCoefficient="0" transmissionCoefficient="0.9" speculateCoefficient="0.1" diffuseCoefficient="0" indexRefraction="0.5">
 			<center x="6.5" y="8" z="5"/>
 			<color R="255" G="248" B="246"/>
 		</Object>
@@ -88,7 +88,7 @@
 		</Object>
 		<Object type="Cylinder" radius="1.0" ambienceCoefficient="0" transmissionCoefficient="0.1" speculateCoefficient="0.1" diffuseCoefficient="1" indexRefraction="0.1">
 			<baseCenter1 x="8" y="6" z="5"/>
-			<baseCenter2 x="8" y="10" z="5"/>
+			<baseCenter2 x="8" y="8" z="5"/>
 			<color R="0" G="100" B="255"/>
 		</Object>
     <!-- MESA -->
@@ -105,13 +105,13 @@
 			<color R="191" G="149" B="21"/>
 		</Object>
 
-		<Object id="frenteMesa1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.5" indexRefraction="0">
+		<Object id="frenteMesa1" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.8" indexRefraction="0">
 			<v0 x="15" y="6" z="-10"/>
 			<v1 x="3" y="6" z="-10"/>
 			<v2 x="3" y="0" z="-10"/>
 			<color R="191" G="149" B="21"/>
 		</Object>
-		<Object id="frenteMesa2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.5" indexRefraction="0">
+		<Object id="frenteMesa2" type="Triangle" ambienceCoefficient="0.3" transmissionCoefficient="0" speculateCoefficient="0.1" diffuseCoefficient="0.8" indexRefraction="0">
 			<v0 x="15" y="6" z="-10"/>
 			<v1 x="3" y="0" z="-10"/>
 			<v2 x="15" y="0" z="-10"/>

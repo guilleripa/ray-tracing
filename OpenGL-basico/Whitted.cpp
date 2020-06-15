@@ -83,11 +83,8 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
     Vector3 colorAmbience = object->getColor() * object->getAmbienceCoefficient();
     Vector3 colorDiffuse = Vector3(0, 0, 0);
     Vector3 colorSpeculate = Vector3(0, 0, 0);
-    Vector3 colorRefraction = Vector3(0, 0, 0);
-    Vector3 colorReflection = Vector3(0, 0, 0);
 
-    // todo separar a metodo
-    for (Light light : scene.getLights()) {
+    for (Light light : scene.getLights()) { // para cada luz
         Vector3 rayLightDirection = (intersection - light.getPosition()).normalize();
         float dotNormalLight = normal.dot(rayLightDirection);
 
@@ -95,79 +92,91 @@ Vector3 Whitted::shadow(Scene scene, Object* object, Vector3 rayOrigin, Vector3 
 
             float distanceToLight = (light.getPosition() - intersection).mod();
 
-            Vector3 diffuseFactor = Vector3(object->getDiffuseCoefficient(), object->getDiffuseCoefficient(), object->getDiffuseCoefficient());
+            
             Vector3 speculateFactor = Vector3(object->getSpeculateCoefficient(), object->getSpeculateCoefficient(), object->getSpeculateCoefficient());
+            Vector3 diffuseFactor = Vector3(object->getDiffuseCoefficient(), object->getDiffuseCoefficient(), object->getDiffuseCoefficient());
 
-            // Para cada objeto en el medio
             float distance = std::numeric_limits<float>::infinity();
             Vector3 pointOfIntersection;
             for (Object* otherObject : scene.getObjects()) {
                 if (otherObject != object) {
 
-                    if (otherObject->intersects(light.getPosition(), rayLightDirection, &distance, &pointOfIntersection) && distance + 0.001 < distanceToLight) {
-                        diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() / 255); // todo investigar
+                    if (otherObject->intersects(light.getPosition(), rayLightDirection, &distance, &pointOfIntersection) && distance < distanceToLight) {
                         speculateFactor = speculateFactor * otherObject->getSpeculateCoefficient() * (otherObject->getColor() / 255);
+                        diffuseFactor = diffuseFactor * otherObject->getTransmissionCoefficient() * (otherObject->getColor() / 255);
                     }
                 }
             }
 
-            Vector3 rayDirectionReflection = reflect(rayLightDirection, normal);
-            float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30); // todo investigar este numero
-            Vector3 colorSpeculateLight = Vector3(0, 0, 0);
-            if (internalReflectedProd > 0) {
-                colorSpeculateLight = Vector3(light.getColor() * internalReflectedProd * speculateFactor);
-            }
-            colorSpeculate = colorSpeculate + colorSpeculateLight;
-
-            Vector3 colorDiffuseLight = Vector3(light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2)));
-            colorDiffuse = colorDiffuse + colorDiffuseLight;
+            colorDiffuse = colorDiffuse + light.getColor() * object->getColor() * diffuseFactor * dotNormalLight / (pow(distanceToLight, 2));
+            colorSpeculate = colorSpeculate + speculateColor(rayLightDirection, rayDirection, normal, light.getColor(), speculateFactor);
+            
 
         }
     }
 
+    Vector3 colorReflection = Vector3(0, 0, 0);
+    Vector3 colorRefraction = Vector3(0, 0, 0);
     if (depth < scene.getMaxDepth()) {
 
-        if (object->getSpeculateCoefficient() > 0) { // objeto es reflejante
-
-            Vector3 rayDirectionReflection = reflect(rayDirection, normal);
-            vector<Vector3> colorR = trace(scene, intersection, rayDirectionReflection, depth + 1, intersectedObjectsStack);
-            colorReflection = colorR[0] * object->getSpeculateCoefficient();
-
+        if (object->getSpeculateCoefficient() > 0) { // si objeto es reflejante
+            colorReflection = reflectColor(scene, object, rayDirection, intersection, normal, depth, intersectedObjectsStack);
         }
-        if (object->getTransmissionCoefficient() > 0) { // objeto es transparente
-            
 
-            // Para saber el angulo de insidencia tenemos que saber desde que objeto viene el rayo
-            // y cual es el indice de refraccion de ese objeto, para eso usamos una pila de objetos que saben su indice
-            // a medida que intersectamos objetos los vamos agregando
-
-            float n1;
-            float n2;
-
-            if (intersectedObjectsStack.empty()) {
-                n1 = 1;
-            }
-            else {
-                n1 = intersectedObjectsStack.top()->getIndexRefraction();
-            }
-
-            n2 = object->getIndexRefraction();
-
-            intersectedObjectsStack.push(object);
-
-            float incidenceAngle = rayDirection.angle(normal);
-
-            //if (incidenceAngle <= asin(n2 / n1)) { // no ocurre la reflexión interna total
-            // todo no fucniona capaz es por gradiantes vs grades
-                Vector3 rayDirectionRefraction = refract(rayDirection, normal, object->getIndexRefraction());
-                vector<Vector3> colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1, intersectedObjectsStack);
-                colorRefraction = colorT[0] * object->getTransmissionCoefficient();
-            //}
+        if (object->getTransmissionCoefficient() > 0) { // si objeto es transparente
+            colorRefraction = refractColor(scene, object, rayDirection, intersection, normal, depth, intersectedObjectsStack);
         }
 
     }
 
     return colorAmbience + colorDiffuse + colorSpeculate + colorRefraction + colorReflection;
+}
+
+Vector3 Whitted::speculateColor(Vector3 rayLightDirection, Vector3 rayDirection, Vector3 normal, Vector3 lightColor, Vector3 speculateFactor) {
+    Vector3 rayDirectionReflection = reflect(rayLightDirection, normal);
+    float internalReflectedProd = pow(rayDirectionReflection.dot(rayDirection), 30);
+    Vector3 colorSpeculateLight = Vector3(0, 0, 0);
+    if (internalReflectedProd > 0) { // si producto punto entre normal y dirección de la luz es positivo
+        colorSpeculateLight = Vector3(lightColor * internalReflectedProd * speculateFactor);
+    }
+
+    return colorSpeculateLight;
+}
+
+Vector3 Whitted::reflectColor(Scene scene, Object* object, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth, std::stack<Object*> intersectedObjectsStack) {
+    Vector3 rayDirectionReflection = reflect(rayDirection, normal);
+    vector<Vector3> colorR = trace(scene, intersection, rayDirectionReflection, depth + 1, intersectedObjectsStack);
+    return colorR[0] * object->getSpeculateCoefficient();
+}
+
+Vector3 Whitted::refractColor(Scene scene, Object* object, Vector3 rayDirection, Vector3 intersection, Vector3 normal, int depth, std::stack<Object*> intersectedObjectsStack) {
+    // Para saber el angulo de insidencia tenemos que saber desde que objeto viene el rayo
+    // y cual es el indice de refraccion de ese objeto, para eso usamos una pila de objetos que saben su indice
+    // a medida que intersectamos objetos los vamos agregando
+
+    float n1;
+    float n2;
+
+    if (intersectedObjectsStack.empty()) {
+        n1 = 1;
+    }
+    else {
+        n1 = intersectedObjectsStack.top()->getIndexRefraction();
+    }
+
+    n2 = object->getIndexRefraction();
+
+    intersectedObjectsStack.push(object);
+
+    float incidenceAngle = rayDirection.angle(normal);
+
+    if (incidenceAngle <= (asin(n2 / n1) * 180.0 / PI)) { // si no ocurre la reflexión interna total
+        Vector3 rayDirectionRefraction = refract(rayDirection, normal, object->getIndexRefraction());
+        vector<Vector3> colorT = trace(scene, intersection, rayDirectionRefraction, depth + 1, intersectedObjectsStack);
+        return colorT[0] * object->getTransmissionCoefficient();
+    }
+
+    return Vector3(0, 0, 0);
 }
 
 Object* Whitted::intersection(Scene scene, Vector3 rayOrigin, Vector3 rayDirection, Vector3* nearestPointOfIntersection) {
