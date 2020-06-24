@@ -25,3 +25,8 @@
 /OpenGL-basico/Debug/*.obj
 ._.DS_Store
 .DS_Store
+/Release2/OpenGL-basico.pdb
+/Release2/OpenGL-basico.ipdb
+/Release2/OpenGL-basico.iobj
+/Release2/OpenGL-basico.exe
+/OpenGL-basico/Release2
