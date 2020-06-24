@@ -84,7 +84,7 @@ void Scene::setCamera(Camera* camera) {
 Scene Scene::loadScene() {
 	tinyxml2::XMLDocument doc;
 
-	tinyxml2::XMLError error = doc.LoadFile("../OpenGL-basico/Scene.xml");
+	tinyxml2::XMLError error = doc.LoadFile("../Escena/Scene.xml");
 
 	if (error != 0) throw 6;
 
